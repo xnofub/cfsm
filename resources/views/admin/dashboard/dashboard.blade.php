@@ -63,8 +63,9 @@
             </div>
             <div class="col-xl-6 col-md-6 mb-6">
                 <div class="card-body">
-                    <div class="text-xs font-weight-bold  text-uppercase mb-1">ACA FALTA OTRO GRAFICO QUE AUN NO SE ME OCURRE</div>
-                    <canvas id="chartPorcentajes" width="100%" height="50">dfg</canvas>
+                    <div class="text-xs font-weight-bold  text-uppercase mb-1">Principales Productores
+                    </div>
+                    <canvas id="chartMuestras" width="100%" height="50">dfg</canvas>
                 </div>
             </div>
 
@@ -82,7 +83,7 @@
 @section('js')
     <script type="text/JavaScript">
         $(function () {
-            console.log("asd");
+
             var ctxP = document.getElementById("chartPorcentajes").getContext('2d');
             var myPieChart = new Chart(ctxP, {
                 type: 'pie',
@@ -95,7 +96,7 @@
                     datasets: [{
                         data: [
                             @foreach($result  as $res)
-                                {{$res['porcentaje']}},
+                            {{$res['porcentaje']}},
                             @endforeach
 
                         ],
@@ -118,11 +119,9 @@
         });
 
 
-
-
-
         $(function () {
             var ctxP = document.getElementById("defectosPorcentaje").getContext('2d');
+
             var myPieChart = new Chart(ctxP, {
                 type: 'bar',
                 data: {
@@ -132,11 +131,50 @@
                         @endforeach
                     ],
                     datasets: [{
+                        label: 'Promedio de Defectos',
+
                         data: [
                             @foreach($data  as $res)
                             {{$res['promedioPorcentaje']}},
                             @endforeach
+                        ],
+                        backgroundColor: [
+                            @foreach($data  as $res)
+                                "#{{$res['color']}}",
+                            @endforeach
+                        ]
+                    }],
+                    options: {
+                        responsive: true
+                    }
+                },
+            });
+        });
 
+
+        $(function () {
+            var ctxP = document.getElementById("chartMuestras").getContext('2d');
+
+            var myPieChart = new Chart(ctxP, {
+                type: 'horizontalBar',
+                data: {
+                    labels: [
+                        @foreach($cantRes  as $res)
+                            "{{$res['nombre']}}",
+                        @endforeach
+                    ],
+                    datasets: [{
+                        label: 'Promedio de Defectos',
+
+                        data: [
+                            @foreach($cantRes  as $res)
+                            {{$res['cantidad']}},
+                            @endforeach
+                        ],
+                        backgroundColor: [
+                            @foreach($result  as $res)
+                                "{{$res['color']}}",
+                            @endforeach
                         ]
                     }],
                     options: {
