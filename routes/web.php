@@ -16,12 +16,13 @@
 
 Auth::routes();
 Auth::routes(['register' => false]);
+Route::get('dashboard','AdminController@index');
 
 
 #Route::post('/login', 'Auth\LoginController@login');
 
 Route::group(['middleware' => ['web']], function () { #auth
-    
+
     Route::get('/', function () {
 
         return redirect()->to('/login');
@@ -36,14 +37,14 @@ Route::group(['middleware' => ['web']], function () { #auth
     #Route::get('/', 'HomeController@index');
     Route::get('/home', function () {
 
-        return view('layouts.web'); 
+        return view('layouts.web');
         return redirect()->to('/muestras');
 
         #
-        
+
     })->name('home');
 
-    
+
 
     #Route::get('/', 'HomeController@index');
 
@@ -71,7 +72,7 @@ Route::group(['middleware' => ['auth']], function () { #auth
     Route::resource('zonas_defectos', 'ZonaDefectoController');
     Route::get('reportes','ReporteController@index');
     Route::resource('graficos', 'GraficoController');
-    
+
 });
 
 
