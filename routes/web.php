@@ -22,17 +22,11 @@ Route::get('dashboard', 'AdminController@index');
 Route::group(['middleware' => ['web']], function () { #auth
 
     Route::get('/', function () {
-
-        if (Auth::user()->perfil->perfil_nombre != "Admin") {
-            //return view('layouts.web');
-            return redirect()->to('/muestras');
-        }
-
-        //return view('layouts.web');
-        return redirect()->to('/dashboard');
-
         return redirect()->to('/login');
     });
+
+
+
 
     Route::get('/test', function () {
         dd(Auth::user()->perfil->perfil_nombre);
