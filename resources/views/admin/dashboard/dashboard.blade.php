@@ -55,24 +55,26 @@
 
     <div>
         <div class="row">
-            <div class="col-xl-6 col-md-6 mb-6">
-                <div class="card-body">
-                    <div class="text-xs font-weight-bold  text-uppercase mb-1">Acumulado</div>
-                    <canvas id="chartPorcentajes" width="100%" height="50">dfg</canvas>
-                </div>
-            </div>
-            <div class="col-xl-6 col-md-6 mb-6">
+
+            <!--<div class="col-xl-6 col-md-6 mb-6">
                 <div class="card-body">
                     <div class="text-xs font-weight-bold  text-uppercase mb-1">Principales Productores
                     </div>
                     <canvas id="chartMuestras" width="100%" height="50">dfg</canvas>
                 </div>
-            </div>
+            </div>-->
 
             <div class="col-xl-12 col-md-12 mb-12">
                 <div class="card-body">
                     <div class="text-xs font-weight-bold  text-uppercase mb-1">Promedio de Defectos</div>
                     <canvas id="defectosPorcentaje" width="150%" height="50"></canvas>
+                </div>
+            </div>
+
+            <div class="col-xl-12 col-md-12 mb-12">
+                <div class="card-body">
+                    <div class="text-xs font-weight-bold  text-uppercase mb-1">Acumulado</div>
+                    <canvas id="chartPorcentajes" width="100%" height="50">dfg</canvas>
                 </div>
             </div>
         </div>
@@ -131,6 +133,7 @@
                         @endforeach
                     ],
                     datasets: [{
+
                         label: 'Promedio de Defectos',
 
                         data: [
@@ -152,37 +155,42 @@
         });
 
 
-        $(function () {
+
+
+       /* $(function () {
             var ctxP = document.getElementById("chartMuestras").getContext('2d');
 
             var myPieChart = new Chart(ctxP, {
                 type: 'horizontalBar',
                 data: {
+
                     labels: [
-                        @foreach($cantRes  as $res)
+                        @foreach($cantRes as $res)
                             "{{$res['nombre']}}",
                         @endforeach
-                    ],
-                    datasets: [{
-                        label: 'Promedio de Defectos',
 
-                        data: [
-                            @foreach($cantRes  as $res)
-                            {{$res['cantidad']}},
+                    ],
+
+
+                    datasets: [
+                            @foreach($cantRes as $res)
+                            {
+
+                                label: "{{$res['nombre']}}",
+
+                                data: [
+                                    {{$res['cantidad']}},
+                                ]
+                            },
                             @endforeach
-                        ],
-                        backgroundColor: [
-                            @foreach($result  as $res)
-                                "{{$res['color']}}",
-                            @endforeach
-                        ]
-                    }],
+                    ],
+
                     options: {
                         responsive: true
                     }
                 },
             });
-        });
+        });*/
     </script>
 
 @endsection
