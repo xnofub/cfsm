@@ -21,9 +21,14 @@ class Muestra extends Model
         'embalaje_id',
         'etiqueta_id',
         'nota_id',
+        'user_id',
         'estado_muestra_id',
         'lote_id',
         'muestra_peso',
+        'muestra_desgrane',
+        'muestra_brix',
+        'lote_codigo',
+        'estado_muestra_id',
         'apariencia_id',
 
     ];

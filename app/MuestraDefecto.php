@@ -14,6 +14,7 @@ class MuestraDefecto extends Model
         'muestra_id',
         'defecto_id',
         'nota_id',
+        'user_id',
     ];
     public $timestamps = false;
 

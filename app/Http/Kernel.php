@@ -20,6 +20,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\TrustProxies::class,
         \App\Http\Middleware\RedirectIfAuthenticated::class,
+        #\App\Http\Middleware\Cors::class,
     ];
 
     /**
@@ -28,6 +29,8 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middlewareGroups = [
+        ###'cors' => \App\Http\Middleware\Cors::class,
+
         'auth' => [
             \Illuminate\Auth\Middleware\Authenticate::class
         ],
@@ -67,7 +70,8 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-	    'admin' => \App\Http\Middleware\Admin::class,
+	#'cors' => \App\Http\Middleware\Cors::class,
+	'admin' => \App\Http\Middleware\Admin::class,
         'QC' => \App\Http\Middleware\QC::class,
         'cliente' => \App\Http\Middleware\Cliente::class,
         #'usuario' => \App\Http\Middleware\Usuario::class,

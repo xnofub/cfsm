@@ -12,6 +12,7 @@ class MuestraImagen extends Model
         'muestra_imagen_ruta',
         'muestra_imagen_fecha',
         'muestra_id',
+        'user_id',
         'muestra_imagen_texto',
         'muestra_imagen_ruta_corta',
     ];

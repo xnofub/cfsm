@@ -932,7 +932,6 @@ class MuestraController extends Controller
 
 
      public function GetReporteConsolidado(){
-        //dd("asd");
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         $statement = 'SELECT m.muestra_id
@@ -940,9 +939,6 @@ class MuestraController extends Controller
         , m.`muestra_fecha`
         , m.`muestra_peso`        
         , m.`muestra_racimos` 
-        , m.`muestra_brix` 
-        , m.`muestra_bolsas` 
-        , et.`etiqueta_nombre` 
         , e.`especie_nombre`
         , v.`variedad_nombre`
         , cl.`calibre_nombre`
@@ -950,9 +946,8 @@ class MuestraController extends Controller
         , m.`nota_id`
         , n.`nota_nombre`
         , a.`apariencia_nombre`
-        , p.`productor_nombre`
-        , em.`embalaje_nombre`
-        , re.`region_nombre` 
+        , p.productor_nombre
+        , em.embalaje_nombre
         , m.`lote_codigo`
                ,SUM(
                        IF(f.defecto_id=1
@@ -1079,9 +1074,7 @@ class MuestraController extends Controller
         INNER JOIN muestra_defecto d ON d.`muestra_id` = m.`muestra_id`
         INNER JOIN defecto f ON f.`defecto_id` = d.`defecto_id`
         INNER JOIN nota n ON n.`nota_id` = m.`nota_id`
-        INNER JOIN embalaje em ON em.`embalaje_id` = m.`embalaje_id`
-        INNER JOIN regiones re ON m.region_id = re.region_id
-        INNER JOIN etiqueta et ON m.etiqueta_id = et.etiqueta_id
+        INNER JOIN  embalaje em ON em.`embalaje_id` = m.`embalaje_id`
         GROUP BY  m.muestra_id
         , m.muestra_id
         , m.`muestra_qr`
@@ -1089,21 +1082,11 @@ class MuestraController extends Controller
         , v.`variedad_nombre`
         , cl.`calibre_nombre`
         , ct.`categoria_nombre`
-        , m.`muestra_fecha`
         , m.`nota_id`
         , n.`nota_nombre`
         , a.`apariencia_nombre`
-        , p.`productor_nombre`
-        , m.muestra_peso
-        , m.muestra_racimos
-        , m.muestra_brix
-        , m.muestra_bolsas
-        , et.etiqueta_nombre
-        , em.embalaje_nombre
-        , re.region_nombre
+        , p.productor_nombre
         , m.`lote_codigo`';
-
-        //dd($statement);
         $consolidado = DB::select(DB::raw($statement));
 
         $spreadsheet = new Spreadsheet();
@@ -1111,41 +1094,36 @@ class MuestraController extends Controller
         $sheet->setCellValue('A1', 'ID');
         $sheet->setCellValue('B1', 'QR');
         $sheet->setCellValue('C1', 'FECHA');
-        $sheet->setCellValue('D1', 'REGION');
-        $sheet->setCellValue('E1', 'PESO');
-        $sheet->setCellValue('F1', 'NUMERO DE RACIMOS');
-        $sheet->setCellValue('G1', 'NUMERO DE BOLSAS');
-        $sheet->setCellValue('H1', 'PRODUCTOR');
-        $sheet->setCellValue('I1', 'ESPECIE');
-        $sheet->setCellValue('J1', 'VARIEDAD');
-        $sheet->setCellValue('K1', 'CALIBRE');
-        $sheet->setCellValue('L1', 'BRIX');
-        $sheet->setCellValue('M1', 'CATEGORIA');
-        $sheet->setCellValue('N1', 'EMBALAJE');
-        $sheet->setCellValue('O1', 'ETIQUETA');
-        $sheet->setCellValue('P1', 'APARIENCIA');
-        $sheet->setCellValue('Q1', 'NOTAFINAL');
+        $sheet->setCellValue('D1', 'PESO');
+        $sheet->setCellValue('E1', 'NUMERO DE RACIMOS');
+        $sheet->setCellValue('F1', 'PRODUCTOR');
+        $sheet->setCellValue('G1', 'ESPECIE');
+        $sheet->setCellValue('H1', 'VARIEDAD');
+        $sheet->setCellValue('I1', 'CALIBRE');
+        $sheet->setCellValue('J1', 'CATEGORIA');
+        $sheet->setCellValue('K1', 'EMBALAJE');
+        $sheet->setCellValue('L1', 'NOTAFINAL');
 
-        $sheet->setCellValue('R1','Racimo Bajo Calibre');
-        $sheet->setCellValue('S1','Racimo Bajo Color');
-        $sheet->setCellValue('T1','Racimo Fuera de Color');
-        $sheet->setCellValue('U1','Racimo Apretado');
-        $sheet->setCellValue('V1','Racimo Bajo Brix');
-        $sheet->setCellValue('W1','Racimo Deforme');
-        $sheet->setCellValue('X1','Manchas(Russet, golpe de sol, trips, etc.)');
-        $sheet->setCellValue('Y1','Racimo Debil/Cristalino');
-        $sheet->setCellValue('Z1','Raquis Deshidratado');
-        $sheet->setCellValue('AA1','Racimo Humedo/Pegajoso');
-        $sheet->setCellValue('AB1','Partiduras - Heridas Abiertas');
-        $sheet->setCellValue('AC1','Acuosas');
-        $sheet->setCellValue('AD1','Bayas Reventas');
-        $sheet->setCellValue('AE1','Oidio');
-        $sheet->setCellValue('AF1','Pudrición Ácida');
-        $sheet->setCellValue('AG1','Desgrane');
-        $sheet->setCellValue('AH1','Penicillium');
-        $sheet->setCellValue('AI1','Botritys (Piel suelta)');
-        $sheet->setCellValue('AJ1','Racimo bajo peso');
-        $sheet->setCellValue('AK1','PALLET');
+        $sheet->setCellValue('M1','Racimo Bajo Calibre');
+        $sheet->setCellValue('N1','Racimo Bajo Color');
+        $sheet->setCellValue('O1','Racimo Fuera de Color');
+        $sheet->setCellValue('P1','Racimo Apretado');
+        $sheet->setCellValue('Q1','Racimo Bajo Brix');
+        $sheet->setCellValue('R1','Racimo Deforme');
+        $sheet->setCellValue('S1','Manchas(Russet, golpe de sol, trips, etc.)');
+        $sheet->setCellValue('T1','Racimo Debil/Cristalino');
+        $sheet->setCellValue('U1','Raquis Deshidratado');
+        $sheet->setCellValue('V1','Racimo Humedo/Pegajoso');
+        $sheet->setCellValue('W1','Partiduras - Heridas Abiertas');
+        $sheet->setCellValue('X1','Acuosas');
+        $sheet->setCellValue('Y1','Bayas Reventas');
+        $sheet->setCellValue('Z1','Oidio');
+        $sheet->setCellValue('AA1','Pudrición Ácida');
+        $sheet->setCellValue('AB1','Desgrane');
+        $sheet->setCellValue('AC1','Penicillium');
+        $sheet->setCellValue('AD1','Botritys (Piel suelta)');
+        $sheet->setCellValue('AE1','Racimo bajo peso');
+        $sheet->setCellValue('AF1','PALLET');
 
 
         $i=2;
@@ -1153,42 +1131,37 @@ class MuestraController extends Controller
             $sheet->setCellValue("A".$i, $c->muestra_id);
             $sheet->setCellValue("B".$i, $c->muestra_qr);
             $sheet->setCellValue("C".$i, $c->muestra_fecha);
-            $sheet->setCellValue("D".$i, $c->region_nombre);
-            $sheet->setCellValue("E".$i, $c->muestra_peso);
-            $sheet->setCellValue("F".$i, $c->muestra_racimos);
-            $sheet->setCellValue("G".$i, $c->muestra_bolsas);
-            $sheet->setCellValue("H".$i, $c->productor_nombre);
-            $sheet->setCellValue("I".$i, $c->especie_nombre);
-            $sheet->setCellValue("J".$i, $c->variedad_nombre);
-            $sheet->setCellValue("K".$i, $c->calibre_nombre);
-            $sheet->setCellValue("L".$i, $c->muestra_brix);
-            $sheet->setCellValue("M".$i, $c->categoria_nombre);
-            $sheet->setCellValue("N".$i, $c->embalaje_nombre);
-            $sheet->setCellValue("O".$i, $c->etiqueta_nombre);
-            $sheet->setCellValue("P".$i, $c->apariencia_nombre);
-            $sheet->setCellValue("Q".$i, $c->nota_nombre);
+            $sheet->setCellValue("D".$i, $c->muestra_peso);
+            $sheet->setCellValue("E".$i, $c->muestra_racimos);
+            $sheet->setCellValue("F".$i, $c->productor_nombre);
+            $sheet->setCellValue("G".$i, $c->especie_nombre);
+            $sheet->setCellValue("H".$i, $c->variedad_nombre);
+            $sheet->setCellValue("I".$i, $c->calibre_nombre);
+            $sheet->setCellValue("J".$i, $c->categoria_nombre);
+            $sheet->setCellValue("K".$i, $c->embalaje_nombre);
+            $sheet->setCellValue("L".$i, $c->nota_nombre);
 
 
-            $sheet->setCellValue('R'.$i,$c->Racimo_Bajo_Calibre);
-            $sheet->setCellValue('S'.$i,$c->Racimo_Bajo_Color);
-            $sheet->setCellValue('T'.$i,$c->Racimo_Fuera_de_Color);
-            $sheet->setCellValue('U'.$i,$c->Racimo_Apretado);
-            $sheet->setCellValue('V'.$i,$c->Racimo_Bajo_Brix);
-            $sheet->setCellValue('W'.$i,$c->Racimo_Deforme);
-            $sheet->setCellValue('X'.$i,$c->Manchas);
-            $sheet->setCellValue('Y'.$i,$c->Racimo_Debil);
-            $sheet->setCellValue('Z'.$i,$c->Raquis_Deshidratado);
-            $sheet->setCellValue('AA'.$i,$c->Racimo_Humedo);
-            $sheet->setCellValue('AB'.$i,$c->Partiduras);
-            $sheet->setCellValue('AC'.$i,$c->Acuosas);
-            $sheet->setCellValue('AD'.$i,$c->Bayas_Reventas);
-            $sheet->setCellValue('AE'.$i,$c->Oidio);
-            $sheet->setCellValue('AF'.$i,$c->acida);
-            $sheet->setCellValue('AG'.$i,$c->Desgrane);
-            $sheet->setCellValue('AH'.$i,$c->Penicillium);
-            $sheet->setCellValue('AI'.$i,$c->Botritys);
-            $sheet->setCellValue('AJ'.$i,$c->Racimo_bajo_peso);
-            $sheet->setCellValue('AK'.$i,$c->lote_codigo);
+            $sheet->setCellValue('M'.$i,$c->Racimo_Bajo_Calibre);
+            $sheet->setCellValue('N'.$i,$c->Racimo_Bajo_Color);
+            $sheet->setCellValue('O'.$i,$c->Racimo_Fuera_de_Color);
+            $sheet->setCellValue('P'.$i,$c->Racimo_Apretado);
+            $sheet->setCellValue('Q'.$i,$c->Racimo_Bajo_Brix);
+            $sheet->setCellValue('R'.$i,$c->Racimo_Deforme);
+            $sheet->setCellValue('S'.$i,$c->Manchas);
+            $sheet->setCellValue('T'.$i,$c->Racimo_Debil);
+            $sheet->setCellValue('U'.$i,$c->Raquis_Deshidratado);
+            $sheet->setCellValue('V'.$i,$c->Racimo_Humedo);
+            $sheet->setCellValue('W'.$i,$c->Partiduras);
+            $sheet->setCellValue('X'.$i,$c->Acuosas);
+            $sheet->setCellValue('Y'.$i,$c->Bayas_Reventas);
+            $sheet->setCellValue('Z'.$i,$c->Oidio);
+            $sheet->setCellValue('AA'.$i,$c->acida);
+            $sheet->setCellValue('AB'.$i,$c->Desgrane);
+            $sheet->setCellValue('AC'.$i,$c->Penicillium);
+            $sheet->setCellValue('AD'.$i,$c->Botritys);
+            $sheet->setCellValue('AE'.$i,$c->Racimo_bajo_peso);
+            $sheet->setCellValue('AF'.$i,$c->lote_codigo);
             $i++;
         }
 
@@ -1220,9 +1193,11 @@ class MuestraController extends Controller
         set_time_limit(0);
         $statement = 'SELECT m.muestra_id
         , m.`muestra_qr`
+
         , m.`muestra_fecha`
         , m.`muestra_peso`        
         , m.`muestra_racimos`
+
         , m.`muestra_brix`
         , m.`lote_codigo`
         , m.`muestra_bolsas`

@@ -19,6 +19,16 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-        'login'
+        'login',
+        '/mobile/muestras/show',
+        '/mobile/muestras/showByQR',
+        '/mobile/muestras/store',
+        '/mobile/muestras/update',
+        '/mobile/muestras/delete',
+        '/mobile/muestras/cancel',
+
+        '/mobile/defectos/store',
+        '/mobile/obtenerCalificacionMuestra',
+        '*'
     ];
 }
