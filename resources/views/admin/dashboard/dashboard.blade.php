@@ -29,15 +29,15 @@
                                         <div class="row no-gutters align-items-center">
                                             <div class="col mr-2">
                                                 <div
-                                                    class="text-xs font-weight-bold text-{{$res['tag']}} text-uppercase mb-1">
+                                                    class="text-xs  text-{{$res['tag']}} text-uppercase mb-1">
                                                     Calificación-{{$res['nombre']}}
                                                 </div>
                                                 <div
-                                                    class="h5 mb-0 font-weight-bold text-{{$res['tag']}} text-gray-800">
+                                                    class="h5 mb-0 text-{{$res['tag']}} text-gray-800">
                                                     Lotes: {{$res['cantidad']}}</div>
                                             </div>
                                             <div class="col-auto">
-                                                <i class="fas fa-plus-circle fa-2x "></i>
+                                                <!-- <i class="fas fa-plus-circle fa-2x "></i> -->
                                             </div>
                                         </div>
                                     </div>
@@ -55,26 +55,24 @@
 
     <div>
         <div class="row">
-
-            <!--<div class="col-xl-6 col-md-6 mb-6">
+            <div class="col-xl-6 col-md-6 mb-6">
+                <div class="card-body">
+                    <div class="text-xs font-weight-bold  text-uppercase mb-1">Acumulado</div>
+                    <canvas id="chartPorcentajes" width="100%" height="50">dfg</canvas>
+                </div>
+            </div>
+            <div class="col-xl-6 col-md-6 mb-6">
                 <div class="card-body">
                     <div class="text-xs font-weight-bold  text-uppercase mb-1">Principales Productores
                     </div>
                     <canvas id="chartMuestras" width="100%" height="50">dfg</canvas>
                 </div>
-            </div>-->
+            </div>
 
             <div class="col-xl-12 col-md-12 mb-12">
                 <div class="card-body">
                     <div class="text-xs font-weight-bold  text-uppercase mb-1">Promedio de Defectos</div>
                     <canvas id="defectosPorcentaje" width="150%" height="50"></canvas>
-                </div>
-            </div>
-
-            <div class="col-xl-12 col-md-12 mb-12">
-                <div class="card-body">
-                    <div class="text-xs font-weight-bold  text-uppercase mb-1">Acumulado</div>
-                    <canvas id="chartPorcentajes" width="100%" height="50">dfg</canvas>
                 </div>
             </div>
         </div>
@@ -133,7 +131,6 @@
                         @endforeach
                     ],
                     datasets: [{
-
                         label: 'Promedio de Defectos',
 
                         data: [
@@ -145,6 +142,11 @@
                             @foreach($data  as $res)
                                 "#{{$res['color']}}",
                             @endforeach
+                        ],
+                        hoverBackgroundColor:[
+                            @foreach($data  as $res)
+                            "#{{$res['color']}}",
+                            @endforeach
                         ]
                     }],
                     options: {
@@ -155,42 +157,37 @@
         });
 
 
-
-
-       /* $(function () {
+        $(function () {
             var ctxP = document.getElementById("chartMuestras").getContext('2d');
 
             var myPieChart = new Chart(ctxP, {
                 type: 'horizontalBar',
                 data: {
-
                     labels: [
-                        @foreach($cantRes as $res)
+                        @foreach($cantRes  as $res)
                             "{{$res['nombre']}}",
                         @endforeach
-
                     ],
+                    datasets: [{
+                        label: 'Lotes inspeccionados',
 
-
-                    datasets: [
-                            @foreach($cantRes as $res)
-                            {
-
-                                label: "{{$res['nombre']}}",
-
-                                data: [
-                                    {{$res['cantidad']}},
-                                ]
-                            },
+                        data: [
+                            @foreach($cantRes  as $res)
+                            {{$res['cantidad']}},
                             @endforeach
-                    ],
-
+                        ],
+                        backgroundColor: [
+                            @foreach($result  as $res)
+                                "{{$res['color']}}",
+                            @endforeach
+                        ]
+                    }],
                     options: {
                         responsive: true
                     }
                 },
             });
-        });*/
+        });
     </script>
 
 @endsection
