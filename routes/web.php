@@ -137,6 +137,8 @@ Route::group(['middleware' => ['web']], function () { #auth
     Route::get('muestrasDatetables', 'MuestraController@muestrasDatetables');
     Route::post('vergraficosconsolidado', 'GraficoController@vergraficosconsolidado')->name('vergraficosconsolidado');
 
+    Route::post('reporteConsolidado', 'MuestraController@GetReporteConsolidado')->name('reporteConsolidado');
+    Route::get('consolidado', 'MuestraController@consolidado')->name('consolidado');
 
 });
 
