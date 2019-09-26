@@ -23,7 +23,6 @@ Auth::routes(['register' => false]);
 Route::group(['middleware' => ['web' /*, 'cors'*/]], function () { #auth
     
     Route::get('/', function () {
-
         return redirect()->to('/login');
     });
 
