@@ -22,9 +22,10 @@ Route::get('dashboard', 'AdminController@index');
 Route::group(['middleware' => ['web']], function () { #auth
 
     Route::get('/', function () {
-
         return redirect()->to('/login');
     });
+
+
 
 
     Route::get('/test', function () {
@@ -108,12 +109,7 @@ Route::group(['middleware' => ['web']], function () { #auth
     Route::get('toleranciasDelete/{id}', 'ToleranciaController@toleranciasDelete');
     Route::post('getProductoresByRegionId', 'MuestraController@getProductoresByRegionId');
     Route::post('vergraficos', 'GraficoController@vergraficos')->name('vergraficos');
-    Route::post('reporteConsolidado', 'MuestraController@GetReporteConsolidado')->name('reporteConsolidado');
-
-    Route::get('consolidado', 'MuestraController@consolidado')->name('consolidado');
-
-    Route::get('consolidadoProductor', 'MuestraController@consolidadoProductor')->name('consolidadoProductor');
-    Route::post('reporteConsolidadoProductor', 'MuestraController@GetReporteConsolidadoProductor')->name('reporteConsolidadoProductor');
+    Route::get('reporteConsolidado', 'MuestraController@GetReporteConsolidado')->name('reporteConsolidado');
 
 
     /* Especiales */
@@ -141,6 +137,8 @@ Route::group(['middleware' => ['web']], function () { #auth
     Route::get('muestrasDatetables', 'MuestraController@muestrasDatetables');
     Route::post('vergraficosconsolidado', 'GraficoController@vergraficosconsolidado')->name('vergraficosconsolidado');
 
+    Route::post('reporteConsolidado', 'MuestraController@GetReporteConsolidado')->name('reporteConsolidado');
+    Route::get('consolidado', 'MuestraController@consolidado')->name('consolidado');
 
 });
 
