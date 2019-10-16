@@ -29,15 +29,15 @@
                                         <div class="row no-gutters align-items-center">
                                             <div class="col mr-2">
                                                 <div
-                                                    class="text-xs  text-{{$res['tag']}} text-uppercase mb-1">
+                                                    class="text-xs font-weight-bold text-{{$res['tag']}} text-uppercase mb-1">
                                                     Calificación-{{$res['nombre']}}
                                                 </div>
                                                 <div
-                                                    class="h5 mb-0 text-{{$res['tag']}} text-gray-800">
+                                                    class="h5 mb-0 font-weight-bold text-{{$res['tag']}} text-gray-800">
                                                     Lotes: {{$res['cantidad']}}</div>
                                             </div>
                                             <div class="col-auto">
-                                                <!-- <i class="fas fa-plus-circle fa-2x "></i> -->
+                                                <i class="fas fa-plus-circle fa-2x "></i>
                                             </div>
                                         </div>
                                     </div>
@@ -55,26 +55,67 @@
 
     <div>
         <div class="row">
-            <div class="col-xl-6 col-md-6 mb-6">
+
+
+            <div class="col-xl-12 col-md-12 mb-12">
+                    {!! Form::open(['route' => 'dashboard', 'method' => 'POST', 'class' => '','role'=>'form']) !!}
+
+                <div class="card-body col-xl-2 col-md-2 mb-2">
+                    <div class="text-xs font-weight-bold  text-uppercase mb-1">Filtros</div>
+                </div>
+                <div class="row col-xl-12 col-md-12 mb-12">
+
+                        <div class="form-group col-xl-4 col-md-4 mb-4">
+                                {!! Form::label('region_id', 'Region', array('class' => '')) !!}
+                                <select class='form-control' id='region_id' name='region_id'>
+                                    <option value=""> Seleccione una región </option>
+                                    @foreach ($regiones as $r)
+                                        <option value="{{$r->region_id}}" @isset($muestra->region_id) {{ $muestra->region_id == $r->region_id ? 'selected' : '' }} @endisset > {{$r->region_nombre}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+
+
+                            <div class="form-group col-xl-4 col-md-4 mb-4">
+                                    {!! Form::label('productor_id', 'Productor', array('class' => '')) !!}
+                                    <select class='form-control' id='productor_id' name='productor_id'>
+                                            @foreach ($productores as $p)
+                                                <option value="{{$p->productor_id}}" @isset($muestra->region_id)  {{ $muestra->productor_id == $p->productor_id ? 'selected' : '' }} @endisset > {{$p->productor_nombre}}  </option>
+                                            @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-xl-4 col-md-4 mb-4">
+                                        {!! Form::label('productor_id', 'Enviar', array('class' => '')) !!}
+
+                                        <button type="submit" class="btn btn-primary btn_ok btn-block">Actualizar <i class="far fa-caret-square-right"></i> </button>
+                                    </div>
+
+
+                                    {!! Form::close() !!}
+
+                </div>
+
+
+
+            </div>
+
+
+
+            <div class="col-xl-12 col-md-12 mb-12">
                 <div class="card-body">
                     <div class="text-xs font-weight-bold  text-uppercase mb-1">Acumulado</div>
                     <canvas id="chartPorcentajes" width="100%" height="50">dfg</canvas>
                 </div>
             </div>
-            <div class="col-xl-6 col-md-6 mb-6">
-                <div class="card-body">
-                    <div class="text-xs font-weight-bold  text-uppercase mb-1">Principales Productores
-                    </div>
-                    <canvas id="chartMuestras" width="100%" height="50">dfg</canvas>
-                </div>
-            </div>
 
             <div class="col-xl-12 col-md-12 mb-12">
-                <div class="card-body">
-                    <div class="text-xs font-weight-bold  text-uppercase mb-1">Promedio de Defectos</div>
-                    <canvas id="defectosPorcentaje" width="150%" height="50"></canvas>
+                    <div class="card-body">
+                        <div class="text-xs font-weight-bold  text-uppercase mb-1">Promedio de Defectos Generales</div>
+                        <canvas id="defectosPorcentaje" width="100%" height="50"></canvas>
+                    </div>
                 </div>
-            </div>
         </div>
     </div>
 
@@ -131,6 +172,7 @@
                         @endforeach
                     ],
                     datasets: [{
+
                         label: 'Promedio de Defectos',
 
                         data: [
@@ -142,11 +184,6 @@
                             @foreach($data  as $res)
                                 "#{{$res['color']}}",
                             @endforeach
-                        ],
-                        hoverBackgroundColor:[
-                            @foreach($data  as $res)
-                            "#{{$res['color']}}",
-                            @endforeach
                         ]
                     }],
                     options: {
@@ -157,37 +194,61 @@
         });
 
 
-        $(function () {
+        $( "#region_id" ).change(function() {
+            var route = "{!!URL::to('/getProductoresByRegionId')!!}";
+            //alert(route);
+            var region_id = $("#region_id" ).val();
+            var select = $("#productor_id");
+            var token = $("input[name=_token]").val();
+            $("#productor_id option").remove();
+             $.post( route, { region_id: region_id , _token : token })
+             .done(function( data ) {
+                 $(data).each(function( index, value ) {
+                        select.append("<option value='"+value.id+"'> "+value.nombre+"</option>");
+                        console.log( value.id + value.nombre );
+                 });
+             });
+
+          //dalert(region_id);
+         });
+
+
+
+
+       /* $(function () {
             var ctxP = document.getElementById("chartMuestras").getContext('2d');
 
             var myPieChart = new Chart(ctxP, {
                 type: 'horizontalBar',
                 data: {
+
                     labels: [
-                        @foreach($cantRes  as $res)
+                        @foreach($cantRes as $res)
                             "{{$res['nombre']}}",
                         @endforeach
-                    ],
-                    datasets: [{
-                        label: 'Lotes inspeccionados',
 
-                        data: [
-                            @foreach($cantRes  as $res)
-                            {{$res['cantidad']}},
+                    ],
+
+
+                    datasets: [
+                            @foreach($cantRes as $res)
+                            {
+
+                                label: "{{$res['nombre']}}",
+
+                                data: [
+                                    {{$res['cantidad']}},
+                                ]
+                            },
                             @endforeach
-                        ],
-                        backgroundColor: [
-                            @foreach($result  as $res)
-                                "{{$res['color']}}",
-                            @endforeach
-                        ]
-                    }],
+                    ],
+
                     options: {
                         responsive: true
                     }
                 },
             });
-        });
+        });*/
     </script>
 
 @endsection

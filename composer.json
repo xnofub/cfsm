@@ -15,7 +15,8 @@
         "laravelcollective/html": "^5.7",
         "phpoffice/phpspreadsheet": "^1.6",
         "yajra/laravel-datatables-buttons": "^4.5",
-        "yajra/laravel-datatables-oracle": "^8.13"
+        "yajra/laravel-datatables-oracle": "^8.13",
+        "nesbot/carbon": "^1.36.2"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

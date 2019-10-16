@@ -14,7 +14,9 @@
 
 Auth::routes();
 Auth::routes(['register' => false]);
-Route::get('dashboard', 'AdminController@index');
+Route::get('dashboard', 'AdminController@index')->name('dashboard');
+Route::post('dashboard', 'AdminController@filter')->name('dashboard');
+
 
 
 #Route::post('/login', 'Auth\LoginController@login');
@@ -23,9 +25,17 @@ Route::group(['middleware' => ['web']], function () { #auth
 
     Route::get('/', function () {
 
+        if (Auth::check() && Auth::user()->perfil->perfil_nombre != "Admin") {
+            //return view('layouts.web');
+            return redirect()->to('/muestras');
+        }
+
+        //return view('layouts.web');
+        if(Auth::check() && Auth::user()->perfil_nombre == "Admin") {
+            return redirect()->to('/dashboard');
+        }
         return redirect()->to('/login');
     });
-
 
     Route::get('/test', function () {
         dd(Auth::user()->perfil->perfil_nombre);
@@ -52,6 +62,9 @@ Route::group(['middleware' => ['web']], function () { #auth
 
     Route::group(['middleware' => ['auth']], function () { #auth
 
+
+
+
         Route::resource('productores', 'ProductorController');
         Route::resource('calibres', 'CalibreController');
         Route::resource('categorias', 'CategoriaController');
@@ -73,6 +86,11 @@ Route::group(['middleware' => ['web']], function () { #auth
         Route::resource('zonas_defectos', 'ZonaDefectoController');
         Route::get('reportes', 'ReporteController@index');
         Route::resource('graficos', 'GraficoController');
+        Route::resource('pallet', 'PaletController');
+        Route::get('paletsDatatables','PaletController@paletsDatatables');
+        Route::get('verMuestras/{lote_codigo}','PaletController@verMuestras')->name('verMuestras');
+        Route::get('palletproductor','PaletController@palletproductor')->name('palletproductor');
+        Route::post('generaExelPallet','PaletController@generaExelPallet')->name('generaExelPallet');
 
     });
 
