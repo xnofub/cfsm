@@ -14,25 +14,41 @@
 
 Auth::routes();
 Auth::routes(['register' => false]);
-Route::get('dashboard', 'AdminController@index');
-
 
 #Route::post('/login', 'Auth\LoginController@login');
+Route::get('/', function () {
+    if (Auth::check() && Auth::user()->perfil->perfil_nombre != "Admin") {
+        //return view('layouts.web');
+        return redirect()->to('/muestras');
+    }
+
+    //return view('layouts.web');
+    if (Auth::check() && Auth::user()->perfil_nombre == "Admin") {
+        return redirect()->to('/dashboard');
+    }
+
+    return view('welcome');
+});
+
+
+Route::get('dashboard', 'AdminController@index')->name('dashboard');
+Route::post('dashboard', 'AdminController@filter')->name('dashboard');
 
 Route::group(['middleware' => ['web']], function () { #auth
 
-    Route::get('/', function () {
+    /*Route::get('/', function () {
 
-        if (Auth::user()->perfil->perfil_nombre != "Admin") {
+        if (Auth::check() && Auth::user()->perfil->perfil_nombre != "Admin") {
             //return view('layouts.web');
             return redirect()->to('/muestras');
         }
 
         //return view('layouts.web');
-        return redirect()->to('/dashboard');
-
-        return redirect()->to('/login');
-    });
+        if(Auth::check() && Auth::user()->perfil_nombre == "Admin") {
+            return redirect()->to('/dashboard');
+        }
+        #return redirect()->to('/login');
+    });*/
 
     Route::get('/test', function () {
         dd(Auth::user()->perfil->perfil_nombre);
@@ -59,6 +75,7 @@ Route::group(['middleware' => ['web']], function () { #auth
 
     Route::group(['middleware' => ['auth']], function () { #auth
 
+
         Route::resource('productores', 'ProductorController');
         Route::resource('calibres', 'CalibreController');
         Route::resource('categorias', 'CategoriaController');
@@ -74,12 +91,18 @@ Route::group(['middleware' => ['web']], function () { #auth
         Route::resource('notas', 'NotaController');
         Route::resource('provincias', 'ProvinciaController');
         Route::resource('regiones', 'RegionController');
-        Route::resource('tolerancias', 'ToleranciaController');
+        #Route::resource('tolerancias', 'ToleranciaController');
         #Route::resource('users', 'UsersController');
         Route::resource('variedades', 'VariedadController');
+        Route::resource('productorVariedades', 'ProductorVariedadController');
         Route::resource('zonas_defectos', 'ZonaDefectoController');
         Route::get('reportes', 'ReporteController@index');
         Route::resource('graficos', 'GraficoController');
+        Route::resource('pallet', 'PaletController');
+        Route::get('paletsDatatables', 'PaletController@paletsDatatables');
+        Route::get('verMuestras/{lote_codigo}', 'PaletController@verMuestras')->name('verMuestras');
+        Route::get('palletproductor', 'PaletController@palletproductor')->name('palletproductor');
+        Route::post('generaExelPallet', 'PaletController@generaExelPallet')->name('generaExelPallet');
 
     });
 
@@ -114,8 +137,28 @@ Route::group(['middleware' => ['web']], function () { #auth
     Route::get('toleranciasDatetables', 'ToleranciaController@toleranciasDatetables');
     Route::get('toleranciasDelete/{id}', 'ToleranciaController@toleranciasDelete');
     Route::post('getProductoresByRegionId', 'MuestraController@getProductoresByRegionId');
+
+    Route::post('getProductorVariedadByProductor', 'ProductorVariedadController@getProductorVariedadByProductor');
+    Route::post('getVariedadByProductor', 'ProductorVariedadController@getVariedadByProductor');
+
+
+
+
+    Route::post('setProductorVariedad', 'ProductorVariedadController@setProductorVariedad');
+
+
+    Route::get('productorVariedadDatetables', 'ProductorVariedadController@productorVariedadDatetables');
+
+
+    Route::post('getDataByProductoresId', 'AdminController@getDataByProductoresId');
+
     Route::post('vergraficos', 'GraficoController@vergraficos')->name('vergraficos');
-    Route::get('reporteConsolidado', 'MuestraController@GetReporteConsolidado')->name('reporteConsolidado');
+    Route::post('reporteConsolidado', 'MuestraController@GetReporteConsolidado')->name('reporteConsolidado');
+
+    Route::get('consolidado', 'MuestraController@consolidado')->name('consolidado');
+
+    Route::get('consolidadoProductor', 'MuestraController@consolidadoProductor')->name('consolidadoProductor');
+    Route::post('reporteConsolidadoProductor', 'MuestraController@GetReporteConsolidadoProductor')->name('reporteConsolidadoProductor');
 
 
     /* Especiales */

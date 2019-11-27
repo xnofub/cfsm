@@ -82,7 +82,7 @@
           </a>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
                 <!-- Right Side Of Navbar -->
-            
+
 
             <a class="dropdown-item" href="#">{{ Auth::user()->name }}</a>
             @guest
@@ -90,7 +90,7 @@
             @else
               <a class="dropdown-item" href="#">Perfil: {{Auth::user()->perfil->perfil_nombre}}</a>
             @endguest
-            
+
             <!--
             <a class="dropdown-item" href="#">Settings</a>
             <a class="dropdown-item" href="#">Activity Log</a>
@@ -141,9 +141,10 @@
             <a class="dropdown-item" href="{!!URL::to('/productores')!!}">Productor</a>
             <a class="dropdown-item" href="{!!URL::to('/variedades')!!}">Variedades</a>
             <a class="dropdown-item" href="{!!URL::to('/calibres')!!}">Calibre</a>
+            <a class="dropdown-item" href="{!!URL::to('/productorVariedades')!!}">Productor/Variedades</a>
             <a class="dropdown-item" href="{!!URL::to('/etiquetas')!!}">Etiqueta</a>
             <a class="dropdown-item" href="{!!URL::to('/embalajes')!!}">Embalaje</a>
-            <a class="dropdown-item" href="{!!URL::to('/tolerancias')!!}">Tolerancia</a>
+            <!--<a class="dropdown-item" href="{!!URL::to('/tolerancias')!!}">Tolerancia</a>-->
           </div>
         </li>
         @endif
@@ -172,6 +173,34 @@
               <i class="fas fa-fw fa-table"></i>
               <span>Reportes</span></a>
           </li>
+        @endif
+
+        @if( in_array(Auth::user()->perfil->perfil_nombre, ['Admin','Cliente']) )
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-fw fa-folder"></i>
+            <span>Consolidados</span>
+          </a>
+          <div class="dropdown-menu" aria-labelledby="pagesDropdown">
+            <h6 class="dropdown-header">Opciones:</h6>
+            <a class="dropdown-item" href="{{ url('consolidado') }}"> Consolidado </a>
+            <a class="dropdown-item" href="{{ url('consolidadoProductor') }}">Consolidado productor</a>
+          </div>
+        </li>
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fas fa-fw fa-folder"></i>
+              <span>Pallet</span>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="pagesDropdown">
+              <h6 class="dropdown-header">Opciones:</h6>
+              <!--<a class="dropdown-item" href="{{ url('pallet') }}">Ver pallets</a>-->
+              <a class="dropdown-item" href="{{ url('palletproductor') }}">Reporte productor</a>
+            </div>
+          </li>
+
         @endif
       </ul>
 

@@ -185,27 +185,27 @@ class PaletController extends Controller
                             ) defecto
                         ")
                     )
-                    ->from('AA.muestra')
-                    ->join('AA.embalaje' , function ($embalaje) {
+                    ->from('aa.muestra')
+                    ->join('aa.embalaje' , function ($embalaje) {
                         $embalaje->on('muestra.embalaje_id', '=', 'embalaje.embalaje_id');
                     })
-                    ->join('AA.apariencia' , function ($apariencia) {
+                    ->join('aa.apariencia' , function ($apariencia) {
                         $apariencia->on('muestra.apariencia_id', '=', 'apariencia.apariencia_id');
                     })
-                    ->join('AA.categoria' , function ($categoria) {
+                    ->join('aa.categoria' , function ($categoria) {
                         $categoria->on('muestra.categoria_id', '=', 'categoria.categoria_id');
                     })
-                    ->join('AA.variedad' , function ($variedad) {
+                    ->join('aa.variedad' , function ($variedad) {
                         $variedad->on('muestra.variedad_id', '=', 'variedad.variedad_id');
                     })
-                    ->join('AA.nota' , function ($nota) {
+                    ->join('aa.nota' , function ($nota) {
                         $nota->on('muestra.nota_id', '=', 'nota.nota_id');
                     })
                     ->where('muestra.productor_id', $productor_id)
-                    ->where('muestra.muestra_fecha', $fecha)
+                    ->whereRaw("  `muestra`.`muestra_fecha`  = '".$fecha."'")
                     #->where('muestra.productor_id', 19)
                     #->where('muestra.muestra_fecha', '2019-02-07')
-                    
+
                     ->whereNotNull('muestra.lote_codigo')
                     #->whereNotNull('muestra.nota_id')
 
@@ -246,7 +246,7 @@ class PaletController extends Controller
                                 FROM muestra_defecto md
                                 INNER JOIN defecto d on md.defecto_id = d.defecto_id
                                 WHERE muestra.muestra_id = md.muestra_id
-                                AND md.muestra_defecto_valor = 
+                                AND md.muestra_defecto_valor =
                                 IFNULL(
                                     (
                                     SELECT MAX(md.muestra_defecto_valor) maximo
@@ -273,27 +273,27 @@ class PaletController extends Controller
                             ) defecto
                         ")
                     )
-                    ->from('AA.muestra')
-                    ->join('AA.embalaje' , function ($embalaje) {
+                    ->from('aa.muestra')
+                    ->join('aa.embalaje' , function ($embalaje) {
                         $embalaje->on('muestra.embalaje_id', '=', 'embalaje.embalaje_id');
                     })
-                    ->join('AA.apariencia' , function ($apariencia) {
+                    ->join('aa.apariencia' , function ($apariencia) {
                         $apariencia->on('muestra.apariencia_id', '=', 'apariencia.apariencia_id');
                     })
-                    ->join('AA.categoria' , function ($categoria) {
+                    ->join('aa.categoria' , function ($categoria) {
                         $categoria->on('muestra.categoria_id', '=', 'categoria.categoria_id');
                     })
-                    ->join('AA.variedad' , function ($variedad) {
+                    ->join('aa.variedad' , function ($variedad) {
                         $variedad->on('muestra.variedad_id', '=', 'variedad.variedad_id');
                     })
-                    ->join('AA.nota' , function ($nota) {
+                    ->join('aa.nota' , function ($nota) {
                         $nota->on('muestra.nota_id', '=', 'nota.nota_id');
                     })
                     ->where('muestra.productor_id', $productor_id)
                     ->where('muestra.muestra_fecha', $fecha)
                     #->where('muestra.productor_id', 19)
                     #->where('muestra.muestra_fecha', '2019-02-07')
-                    
+
                     ->whereNotNull('muestra.lote_codigo')
                     #->whereNotNull('muestra.nota_id')
 
@@ -301,7 +301,7 @@ class PaletController extends Controller
 */
 
 
-        
+
         //PALLETS CON CALIFICACION
         /*
         $pallets_agrupados = Muestra::groupBy('lote_codigo','categoria_id','variedad_id')
@@ -311,7 +311,7 @@ class PaletController extends Controller
         ->select('lote_codigo',
             'categoria_id',
             'muestra_id',
-            DB::raw('count(*) as total'), 
+            DB::raw('count(*) as total'),
             DB::raw('sum(nota_id) as nota_total'),
             DB::raw('0 as nota_final_pallet'),
             DB::raw('0 as nota_final_pallet')

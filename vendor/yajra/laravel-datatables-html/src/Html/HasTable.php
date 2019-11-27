@@ -123,7 +123,7 @@ trait HasTable
         $th = [];
         foreach ($this->collection->toArray() as $row) {
             $thAttr = $this->html->attributes(array_merge(
-                array_only($row, ['class', 'id', 'width', 'style', 'data-class', 'data-hide']),
+                Arr::only($row, ['class', 'id', 'title', 'width', 'style', 'data-class', 'data-hide']),
                 $row['attributes']
             ));
             $th[] = '<th ' . $thAttr . '>' . $row['title'] . '</th>';
@@ -157,8 +157,8 @@ trait HasTable
         $footer = [];
         foreach ($this->collection->all() as $row) {
             if (is_array($row->footer)) {
-                $footerAttr = $this->html->attributes(array_only($row->footer,
-                    ['class', 'id', 'width', 'style', 'data-class', 'data-hide']));
+                $footerAttr = $this->html->attributes(Arr::only($row->footer,
+                    ['class', 'id', 'title', 'width', 'style', 'data-class', 'data-hide']));
                 $title = isset($row->footer['title']) ? $row->footer['title'] : '';
                 $footer[] = '<th ' . $footerAttr . '>' . $title . '</th>';
             } else {

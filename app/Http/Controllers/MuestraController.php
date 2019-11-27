@@ -24,6 +24,8 @@ use yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 use App\Tolerancia;
+use Illuminate\Support\Facades\Log;
+
 use App\MuestraDefecto;
 use DB;
 use App\ToleranciaGrupo;
@@ -63,6 +65,7 @@ class MuestraController extends Controller
         $productores = Productor::where('region_id', '1')->get();
         $especies = Especie::orderBy('especie_nombre')->pluck('especie_nombre','especie_id');
         $variedades = Variedad::orderBy('variedad_nombre')->pluck('variedad_nombre','variedad_id');
+
         $calibres = Calibre::orderBy('calibre_nombre')->pluck('calibre_nombre','calibre_id');
         $categorias = Categoria::orderBy('categoria_nombre')->pluck('categoria_nombre','categoria_id');
         $embalajes = Embalaje::orderBy('embalaje_nombre')->pluck('embalaje_nombre','embalaje_id');
@@ -258,18 +261,7 @@ class MuestraController extends Controller
         $grupos_totales = DB::select(DB::raw($statement));
 
         foreach($grupos_totales as $g){
-            //echo $g->concepto_id ." - ".$g->grupo_id." - ".$g->total_grupo;
-            //echo "<br>";
 
-            /*$query = "select *
-            from tolerancia_grupo
-            where grupo_id = $g->grupo_id
-            and categoria_id = $muestra->categoria_id
-            and tolerancia_grupo_desde <=  $g->total_grupo
-            and tolerancia_grupo_hasta >=  $g->total_grupo  ";
-
-            $result = DB::select(DB::raw($query));
-            dd($query);*/
 
 
             $result = ToleranciaGrupo::where('grupo_id',$g->grupo_id)
@@ -493,7 +485,6 @@ class MuestraController extends Controller
                     );
         }
         return response()->json($arrayProveedores);
-
     }
 
     public function getVariedadesByEspecieId(Request $request){
@@ -936,164 +927,164 @@ class MuestraController extends Controller
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         $statement = 'SELECT m.muestra_id
-        , m.`muestra_qr`
-        , m.`muestra_fecha`
-        , m.`muestra_peso`        
-        , m.`muestra_racimos` 
-        , m.`muestra_brix` 
-        , m.`muestra_bolsas` 
-        , et.`etiqueta_nombre` 
-        , e.`especie_nombre`
-        , v.`variedad_nombre`
-        , cl.`calibre_nombre`
-        , ct.`categoria_nombre`
-        , m.`nota_id`
-        , n.`nota_nombre`
-        , a.`apariencia_nombre`
-        , p.`productor_nombre`
-        , em.`embalaje_nombre`
-        , re.`region_nombre` 
-        , m.`lote_codigo`
+        , m.muestra_qr
+        , m.muestra_fecha
+        , m.muestra_peso
+        , m.muestra_racimos
+        , m.muestra_brix
+        , m.muestra_bolsas
+        , et.etiqueta_nombre
+        , e.especie_nombre
+        , v.variedad_nombre
+        , cl.calibre_nombre
+        , ct.categoria_nombre
+        , m.nota_id
+        , n.nota_nombre
+        , a.apariencia_nombre
+        , p.productor_nombre
+        , em.embalaje_nombre
+        , re.region_nombre
+        , m.lote_codigo
                ,SUM(
                        IF(f.defecto_id=1
-                       ,   d.`muestra_defecto_calculo`
+                       ,   d.muestra_defecto_calculo
                        ,   0
                        )
                    ) "Racimo_Bajo_Calibre"
                ,SUM(
                        IF(f.defecto_id=2
-                       ,   d.`muestra_defecto_calculo`
+                       ,   d.muestra_defecto_calculo
                        ,   0
                        )
                    ) "Racimo_Bajo_Color"
 
                ,SUM(
                        IF(f.defecto_id=3
-                       ,   d.`muestra_defecto_calculo`
+                       ,   d.muestra_defecto_calculo
                        ,   0
                        )
                    ) "Racimo_Fuera_de_Color"
                    ,SUM(
                        IF(f.defecto_id=4
-                       ,   d.`muestra_defecto_calculo`
+                       ,   d.muestra_defecto_calculo
                        ,   0
                        )
                    ) "Racimo_Apretado"
                    ,SUM(
                        IF(f.defecto_id=5
-                       ,   d.`muestra_defecto_calculo`
+                       ,   d.muestra_defecto_calculo
                        ,   0
                        )
                    ) "Racimo_Bajo_Brix"
                    ,SUM(
                        IF(f.defecto_id=6
-                       ,   d.`muestra_defecto_calculo`
+                       ,   d.muestra_defecto_calculo
                        ,   0
                        )
                    ) "Racimo_Deforme"
                    ,SUM(
                        IF(f.defecto_id=7
-                       ,   d.`muestra_defecto_calculo`
+                       ,   d.muestra_defecto_calculo
                        ,   0
                        )
                    ) "Manchas"
                    ,SUM(
                        IF(f.defecto_id=8
-                       ,   d.`muestra_defecto_calculo`
+                       ,   d.muestra_defecto_calculo
                        ,   0
                        )
                    ) "Racimo_Debil"
                    ,SUM(
                        IF(f.defecto_id=9
-                       ,   d.`muestra_defecto_calculo`
+                       ,   d.muestra_defecto_calculo
                        ,   0
                        )
                    ) "Raquis_Deshidratado"
                    ,SUM(
                        IF(f.defecto_id=10
-                       ,   d.`muestra_defecto_calculo`
+                       ,   d.muestra_defecto_calculo
                        ,   0
                        )
                    ) "Racimo_Humedo"
                    ,SUM(
                        IF(f.defecto_id=11
-                       ,   d.`muestra_defecto_calculo`
+                       ,   d.muestra_defecto_calculo
                        ,   0
                        )
                    ) "Partiduras"
                    ,SUM(
                        IF(f.defecto_id=12
-                       ,   d.`muestra_defecto_calculo`
+                       ,   d.muestra_defecto_calculo
                        ,   0
                        )
                    ) "Acuosas"
                    ,SUM(
                        IF(f.defecto_id=13
-                       ,   d.`muestra_defecto_calculo`
+                       ,   d.muestra_defecto_calculo
                        ,   0
                        )
                    ) "Bayas_Reventas"
                    ,SUM(
                        IF(f.defecto_id=14
-                       ,   d.`muestra_defecto_calculo`
+                       ,   d.muestra_defecto_calculo
                        ,   0
                        )
                    ) "Oidio"
                    ,SUM(
                        IF(f.defecto_id=15
-                       ,   d.`muestra_defecto_calculo`
+                       ,   d.muestra_defecto_calculo
                        ,   0
                        )
                    ) "acida"
              ,SUM(
                        IF(f.defecto_id=20
-                       ,   d.`muestra_defecto_calculo`
+                       ,   d.muestra_defecto_calculo
                        ,   0
                        )
                    ) "Desgrane"
                 ,SUM(
                        IF(f.defecto_id=21
-                       ,   d.`muestra_defecto_calculo`
+                       ,   d.muestra_defecto_calculo
                        ,   0
                        )
                    ) "Penicillium"
                    ,SUM(
                        IF(f.defecto_id=22
-                       ,   d.`muestra_defecto_calculo`
+                       ,   d.muestra_defecto_calculo
                        ,   0
                        )
                    ) "Botritys"
                    ,SUM(
                        IF(f.defecto_id=23
-                       ,   d.`muestra_defecto_calculo`
+                       ,   d.muestra_defecto_calculo
                        ,   0
                        )
                    ) "Racimo_bajo_peso"
         FROM muestra  m
-        inner join apariencia a on a.`apariencia_id` = m.`apariencia_id`
-        inner join especie e on e.`especie_id` = m.`especie_id`
-        inner join variedad v on v.`variedad_id` = m.`variedad_id`
-        inner join productor p on p.`productor_id` =  m.`productor_id`
-        INNER JOIN `calibre` cl on cl.`calibre_id`= m.`calibre_id`
-        inner join categoria ct on ct.`categoria_id` = m.`categoria_id`
-        INNER JOIN muestra_defecto d ON d.`muestra_id` = m.`muestra_id`
-        INNER JOIN defecto f ON f.`defecto_id` = d.`defecto_id`
-        INNER JOIN nota n ON n.`nota_id` = m.`nota_id`
-        INNER JOIN embalaje em ON em.`embalaje_id` = m.`embalaje_id`
+        inner join apariencia a on a.apariencia_id = m.apariencia_id
+        inner join especie e on e.especie_id = m.especie_id
+        inner join variedad v on v.variedad_id = m.variedad_id
+        inner join productor p on p.productor_id =  m.productor_id
+        INNER JOIN calibre cl on cl.calibre_id= m.calibre_id
+        inner join categoria ct on ct.categoria_id = m.categoria_id
+        INNER JOIN muestra_defecto d ON d.muestra_id = m.muestra_id
+        INNER JOIN defecto f ON f.defecto_id = d.defecto_id
+        INNER JOIN nota n ON n.nota_id = m.nota_id
+        INNER JOIN embalaje em ON em.embalaje_id = m.embalaje_id
         INNER JOIN regiones re ON m.region_id = re.region_id
         INNER JOIN etiqueta et ON m.etiqueta_id = et.etiqueta_id
         GROUP BY  m.muestra_id
         , m.muestra_id
-        , m.`muestra_qr`
-        , e.`especie_nombre`
-        , v.`variedad_nombre`
-        , cl.`calibre_nombre`
-        , ct.`categoria_nombre`
-        , m.`muestra_fecha`
-        , m.`nota_id`
-        , n.`nota_nombre`
-        , a.`apariencia_nombre`
-        , p.`productor_nombre`
+        , m.muestra_qr
+        , e.especie_nombre
+        , v.variedad_nombre
+        , cl.calibre_nombre
+        , ct.categoria_nombre
+        , m.muestra_fecha
+        , m.nota_id
+        , n.nota_nombre
+        , a.apariencia_nombre
+        , p.productor_nombre
         , m.muestra_peso
         , m.muestra_racimos
         , m.muestra_brix
@@ -1101,7 +1092,7 @@ class MuestraController extends Controller
         , et.etiqueta_nombre
         , em.embalaje_nombre
         , re.region_nombre
-        , m.`lote_codigo`';
+        , m.lote_codigo';
 
         //dd($statement);
         $consolidado = DB::select(DB::raw($statement));
@@ -1221,7 +1212,7 @@ class MuestraController extends Controller
         $statement = 'SELECT m.muestra_id
         , m.`muestra_qr`
         , m.`muestra_fecha`
-        , m.`muestra_peso`        
+        , m.`muestra_peso`
         , m.`muestra_racimos`
         , m.`muestra_brix`
         , m.`lote_codigo`
@@ -1377,6 +1368,7 @@ class MuestraController extends Controller
         , a.`apariencia_nombre`
         , p.productor_nombre
         ';
+        Log::info($statement);
         $consolidado = DB::select(DB::raw($statement));
 
         $spreadsheet = new Spreadsheet();
