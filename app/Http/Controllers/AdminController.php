@@ -8,6 +8,7 @@ use App\MuestraDefecto;
 use App\Nota;
 use App\Productor;
 use App\Region;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -57,8 +58,7 @@ class AdminController extends Controller
             ORDER BY
             cantidad
             DESC
-            LIMIT 4
-        "));
+            LIMIT 4"));
         $cantRes = array();
         foreach ($cantidad as $item) {
             $cantRes[] = ['nombre' => $item->productor_nombre, 'cantidad'=>$item->cantidad];
@@ -154,6 +154,7 @@ class AdminController extends Controller
         # code...
         $notas = Nota::all();
         $result = array();
+        $defaultDate = Carbon::now();
 
         $total = Muestra::all()->count();
         $pesoTotal = Muestra::all()->sum('muestra_peso');
@@ -162,6 +163,7 @@ class AdminController extends Controller
         $productores = Productor::where('region_id', '1')->get();
 
         $productorId = $request->productor_id;
+        $fecha = new Carbon($request->fecha) ?? $defaultDate;
         $where = "";
         $flag = false;
         if($productorId != null) {
@@ -181,8 +183,8 @@ class AdminController extends Controller
             $result [$nota->nota_nombre]['porcentaje'] = round((Muestra::where('nota_id', $nota->nota_id)->count()) * 100 / $total, 2);
 
             if($flag) {
-                $result [$nota->nota_nombre]['cantidad'] = Muestra::where('nota_id', $nota->nota_id)->where('productor_id', $productorId)->count();
-                $result [$nota->nota_nombre]['porcentaje'] = round((Muestra::where('nota_id', $nota->nota_id)->where('productor_id', $productorId)->count()) * 100 / $total, 2);
+                $result [$nota->nota_nombre]['cantidad'] = Muestra::where('nota_id', $nota->nota_id)->whereMuestraFecha($fecha)->where('productor_id', $productorId)->count();
+                $result [$nota->nota_nombre]['porcentaje'] = round((Muestra::where('nota_id', $nota->nota_id)->whereMuestraFecha($fecha)->where('productor_id', $productorId)->count()) * 100 / $total, 2);
             }
         }
 
@@ -207,8 +209,7 @@ class AdminController extends Controller
             ORDER BY
             cantidad
             DESC
-            LIMIT 4
-        "));
+            LIMIT 4"));
         $cantRes = array();
         foreach ($cantidad as $item) {
             $cantRes[] = ['nombre' => $item->productor_nombre, 'cantidad'=>$item->cantidad];
@@ -226,5 +227,5 @@ class AdminController extends Controller
 
         //return view('admin.dashboard.dashboard', compact('result', 'data','cantRes','productores','regiones'));
 
-    }
+    }//fin funcion
 }

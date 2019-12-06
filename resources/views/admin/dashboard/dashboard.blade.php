@@ -58,47 +58,51 @@
 
 
             <div class="col-xl-12 col-md-12 mb-12">
-                    {!! Form::open(['route' => 'dashboard', 'method' => 'POST', 'class' => '','role'=>'form']) !!}
+                {!! Form::open(['route' => 'dashboard', 'method' => 'POST', 'class' => '','role'=>'form']) !!}
 
                 <div class="card-body col-xl-2 col-md-2 mb-2">
                     <div class="text-xs font-weight-bold  text-uppercase mb-1">Filtros</div>
                 </div>
                 <div class="row col-xl-12 col-md-12 mb-12">
+                    <div class="form-group col-xl-4 col-md-4 mb-4">
+                        <label class="control-label">Fecha (Desde)</label>
+                        <div class="input-group date" id="dt1">
+                            <input id="muestra_fecha_filtro" name="muestra_fecha_filtro" class="form-control datepicker" type="text">
+                        </div>
+                    </div>
 
-                        <div class="form-group col-xl-6 col-md-6 mb-6">
-                                {!! Form::label('region_id', 'Region', array('class' => '')) !!}
-                                <select class='form-control' id='region_id' name='region_id'>
-                                    <option value=""> Seleccione una región </option>
-                                    @foreach ($regiones as $r)
-                                        <option value="{{$r->region_id}}" @isset($muestra->region_id) {{ $muestra->region_id == $r->region_id ? 'selected' : '' }} @endisset > {{$r->region_nombre}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                    <div class="form-group col-xl-4 col-md-4 mb-4">
+                        {!! Form::label('region_id', 'Region', array('class' => '')) !!}
+                        <select class='form-control' id='region_id' name='region_id'>
+                            <option value=""> Seleccione una región</option>
+                            @foreach ($regiones as $r)
+                                <option
+                                    value="{{$r->region_id}}" @isset($muestra->region_id) {{ $muestra->region_id == $r->region_id ? 'selected' : '' }} @endisset > {{$r->region_nombre}}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
 
+                    <div class="form-group col-xl-4 col-md-4 mb-4">
+                        {!! Form::label('productor_id', 'Productor', array('class' => '')) !!}
+                        <select class='form-control' id='productor_id' name='productor_id'>
+                            @foreach ($productores as $p)
+                                <option
+                                    value="{{$p->productor_id}}" @isset($muestra->region_id)  {{ $muestra->productor_id == $p->productor_id ? 'selected' : '' }} @endisset > {{$p->productor_nombre}}  </option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                            <div class="form-group col-xl-6 col-md-6 mb-6">
-                                    {!! Form::label('productor_id', 'Productor', array('class' => '')) !!}
-                                    <select class='form-control' id='productor_id' name='productor_id'>
-                                            @foreach ($productores as $p)
-                                                <option value="{{$p->productor_id}}" @isset($muestra->region_id)  {{ $muestra->productor_id == $p->productor_id ? 'selected' : '' }} @endisset > {{$p->productor_nombre}}  </option>
-                                            @endforeach
-                                    </select>
-                                </div>
+                    <div class="form-group col-xl-4 col-md-4 mb-4">
 
-                                <div class="form-group col-xl-4 col-md-4 mb-4">
-
-                                        <!--<button type="submit" class="btn btn-primary btn_ok btn-block">Actualizar <i class="far fa-caret-square-right"></i> </button>-->
-                                    </div>
-
+                        <!--<button type="submit" class="btn btn-primary btn_ok btn-block">Actualizar <i class="far fa-caret-square-right"></i> </button>-->
+                    </div>
 
 
                 </div>
 
 
-
             </div>
-
 
 
             <div class="col-xl-12 col-md-12 mb-12">
@@ -109,20 +113,44 @@
             </div>
 
             <div class="col-xl-12 col-md-12 mb-12">
-                    <div class="card-body">
-                        <div class="text-xs font-weight-bold  text-uppercase mb-1">Promedio de Defectos Generales</div>
-                        <canvas id="defectosPorcentaje" width="100%" height="50"></canvas>
-                    </div>
+                <div class="card-body">
+                    <div class="text-xs font-weight-bold  text-uppercase mb-1">Promedio de Defectos Generales</div>
+                    <canvas id="defectosPorcentaje" width="100%" height="50"></canvas>
                 </div>
+            </div>
         </div>
     </div>
 
 
 @endsection
 @section('js')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js"></script>
 
-<script type="text/JavaScript">
+
+    <link rel="stylesheet" href="{{ url('vendor/datatables/buttons.bootstrap4.min.css') }}">
+    <link href="https://unpkg.com/gijgo@1.9.11/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://unpkg.com/gijgo@1.9.11/js/gijgo.min.js" type="text/javascript"></script>
+    <script src="{{ url('js/messages/messages.es-es.min.js') }}"></script>
+    <script src="{{ url('vendor/datatables/dataTables.buttons.min.js') }}"></script>
+
+
+
+
+
+    <script type="text/JavaScript">
+
+
+        $(document).ready(function () {
+            var muestra_fecha = $('#muestra_fecha_filtro').datepicker({
+                uiLibrary: 'bootstrap4',
+                locale: 'es-es',
+                format: 'dd-mm-yyyy',
+                change: function (e) {
+                    $(this).focus();
+                }
+            });
+        });
+
 
 
         var ctxP = document.getElementById("chartPorcentajes").getContext('2d');
@@ -146,46 +174,45 @@
                         @endforeach
                     ],
                     hoverBackgroundColor: [
-                            @foreach($result  as $res)
-                                "{{$res['color_bg']}}",
-                            @endforeach
-                        ]
-                    }],
-                    options: {
-                        responsive: true
-                    }
-                },
-            });
+                        @foreach($result  as $res)
+                            "{{$res['color_bg']}}",
+                        @endforeach
+                    ]
+                }],
+                options: {
+                    responsive: true
+                }
+            },
+        });
 
 
-
-            var ctxP = document.getElementById("defectosPorcentaje").getContext('2d');
-            var defectosPorcentaje = new Chart(ctxP, {
-                type: 'bar',
-                data: {
-                    labels: [
+        var ctxP = document.getElementById("defectosPorcentaje").getContext('2d');
+        var defectosPorcentaje = new Chart(ctxP, {
+            type: 'bar',
+            data: {
+                labels: [
+                    @foreach($data  as $res)
+                        "{{$res['nombre']}}",
+                    @endforeach
+                ],
+                datasets: [{
+                    label: 'Promedio de Defectos',
+                    data: [
                         @foreach($data  as $res)
-                            "{{$res['nombre']}}",
+                        {{$res['promedioPorcentaje']}},
                         @endforeach
                     ],
-                    datasets: [{
-                        label: 'Promedio de Defectos',
-                        data: [
-                            @foreach($data  as $res)
-                            {{$res['promedioPorcentaje']}},
-                            @endforeach
-                        ],
-                        backgroundColor: [
-                            @foreach($data  as $res)
-                                "#{{$res['color']}}",
-                            @endforeach
-                        ]
-                    }],
-                    options: {
-                        responsive: true
-                    }
-                },
-            });
+                    backgroundColor: [
+                        @foreach($data  as $res)
+                            "#{{$res['color']}}",
+                        @endforeach
+                    ]
+                }],
+                options: {
+                    responsive: true
+                }
+            },
+        });
 
         function actualizaGraficosGastos(datosGraficos) {
 
@@ -198,7 +225,7 @@
             var defectosPorcentajeArray = [];
             var chartPorcentajes = [];
 
-            $.each(datosGraficos, function(i, item) {
+            $.each(datosGraficos, function (i, item) {
                 dataIngresoReal.push(datosGraficos[i].value_ingreso);
                 dataIngresoProyectado.push(datosGraficos[i].value_pry_ingreso);
 
@@ -206,7 +233,7 @@
                 gastoProyectado.push(datosGraficos[i].value_pry_gasto);
             });
 
-            console.log("gastoReal"+gastoReal);
+            console.log("gastoReal" + gastoReal);
             console.log(gastoProyectado);
             ingresoProyectadoChart.data.datasets[0].data = dataIngresoReal;
             ingresoProyectadoChart.data.datasets[1].data = dataIngresoProyectado;
@@ -223,7 +250,7 @@
 
             var defectosPorcentajeArray = [];
 
-            $.each(data, function(i, item) {
+            $.each(data, function (i, item) {
                 defectosPorcentajeArray.push(data[i].promedioPorcentaje);
             });
             console.log(defectosPorcentajeArray);
@@ -237,7 +264,7 @@
 
             var chartPorcentajesArray = [];
 
-            $.each(data, function(i, item) {
+            $.each(data, function (i, item) {
                 chartPorcentajesArray.push(data[i].porcentaje);
             });
             chartPorcentajes.data.datasets[0].data = chartPorcentajesArray;
@@ -246,47 +273,48 @@
         }
 
 
-
-        $( "#region_id" ).change(function() {
+        $("#region_id").change(function () {
             var route = "{!!URL::to('/getProductoresByRegionId')!!}";
             //alert(route);
-            var region_id = $("#region_id" ).val();
+            var region_id = $("#region_id").val();
             var select = $("#productor_id");
             var token = $("input[name=_token]").val();
             $("#productor_id option").remove();
-             $.post( route, { region_id: region_id , _token : token })
-             .done(function( data ) {
-                 $(data).each(function( index, value ) {
-                        select.append("<option value='"+value.id+"'> "+value.nombre+"</option>");
-                        console.log( value.id + value.nombre );
-                 });
-             });
-         });
-
-         $( "#productor_id" ).change(function() {
-            var route = "{!!URL::to('/getDataByProductoresId')!!}";
-            var region_id = $("#region_id" ).val();
-            var productor_id = $("#productor_id" ).val();
-            var token = $("input[name=_token]").val();
-             $.post( route, {productor_id: productor_id, region_id: region_id , _token : token })
-             .done(function( data ) {
-                 var contador = 0;
-                 $.each(data, function(i, item) {
-
-                    //console.log(item);
-                    //console.log(i);
-                    //console.log(contador);
-
-                    if(contador == 0) {
-                        actualizaDefectosPorcentaje(item);
-                    }
-                    if(contador == 1) {
-                        actualizachartPorcentajes(item);
-                    }
-                    contador++;
+            $.post(route, {region_id: region_id, _token: token})
+                .done(function (data) {
+                    $(data).each(function (index, value) {
+                        select.append("<option value='" + value.id + "'> " + value.nombre + "</option>");
+                        console.log(value.id + value.nombre);
+                    });
                 });
-             });
-         });
+        });
+
+        $("#productor_id").change(function () {
+            var fecha = $("#muestra_fecha_filtro").val();
+            console.log(fecha);
+            var route = "{!!URL::to('/getDataByProductoresId')!!}";
+            var region_id = $("#region_id").val();
+            var productor_id = $("#productor_id").val();
+            var token = $("input[name=_token]").val();
+            $.post(route, {productor_id: productor_id, region_id: region_id, fecha: fecha, _token: token})
+                .done(function (data) {
+                    var contador = 0;
+                    $.each(data, function (i, item) {
+
+                        //console.log(item);
+                        //console.log(i);
+                        //console.log(contador);
+
+                        if (contador == 0) {
+                            actualizaDefectosPorcentaje(item);
+                        }
+                        if (contador == 1) {
+                            actualizachartPorcentajes(item);
+                        }
+                        contador++;
+                    });
+                });
+        });
     </script>
 
 @endsection

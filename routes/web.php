@@ -17,15 +17,21 @@ Auth::routes(['register' => false]);
 
 #Route::post('/login', 'Auth\LoginController@login');
 Route::get('/', function () {
-    if (Auth::check() && Auth::user()->perfil->perfil_nombre != "Admin") {
+    if (Auth::check() && isset(Auth::user()->perfil->perfil_nombre)) {
         //return view('layouts.web');
-        return redirect()->to('/muestras');
+        if(Auth::user()->perfil->perfil_nombre != "Admin"){
+            return redirect()->to('/muestras');
+        }
+        if(Auth::user()->perfil->perfil_nombre == "Admin"){
+            return redirect()->to('/dashboard');
+        }
     }
 
     //return view('layouts.web');
     if (Auth::check() && Auth::user()->perfil_nombre == "Admin") {
-        return redirect()->to('/dashboard');
+        return redirect()->to('/getDataByProductoresId');
     }
+    //return redirect()->to('/muestras');
 
     return view('welcome');
 });
@@ -57,13 +63,17 @@ Route::group(['middleware' => ['web']], function () { #auth
 
     #Route::get('/', 'HomeController@index');
     Route::get('/home', function () {
-        if (Auth::user()->perfil->perfil_nombre != "Admin") {
+        if (Auth::check() && isset(Auth::user()->perfil->perfil_nombre)) {
             //return view('layouts.web');
-            return redirect()->to('/muestras');
+            if(Auth::user()->perfil->perfil_nombre != "Admin"){
+                return redirect()->to('/muestras/create');
+            }
+            if(Auth::user()->perfil->perfil_nombre == "Admin"){
+                return redirect()->to('/dashboard');
+            }
         }
+        return redirect()->to('/muestras');
 
-        //return view('layouts.web');
-        return redirect()->to('/dashboard');
 
         #
 
