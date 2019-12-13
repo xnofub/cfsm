@@ -32,7 +32,7 @@ class Muestra extends Model
         'apariencia_id',
 
     ];
-    public $timestamps = false;
+    public $timestamps = true;
 
     #hasMany's
     public function muestras_defectos () {

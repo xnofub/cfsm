@@ -160,7 +160,7 @@ Route::group(['middleware' => ['web']], function () { #auth
     Route::get('productorVariedadDatetables', 'ProductorVariedadController@productorVariedadDatetables');
 
 
-    Route::post('getDataByProductoresId', 'AdminController@getDataByProductoresId');
+    Route::post('getDataByProductoresId', 'AdminController@muestrasDatetables');
 
     Route::post('vergraficos', 'GraficoController@vergraficos')->name('vergraficos');
     Route::post('reporteConsolidado', 'MuestraController@GetReporteConsolidado')->name('reporteConsolidado');

@@ -467,8 +467,7 @@ class MuestraController extends Controller
         return Datatables::of($muestras)
             ->addColumn('action', function ($muestras) {
                 return '
-                    <a href="'.route('productores.edit',$muestras->muestra_id).'" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> Editar </a>
-                    <a href="'.url('productoresDelete/'.$muestras->muestra_id).'" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-edit"></i> Eliminar </a>
+                    <a href="'.route('muestras.edit',$muestras->muestra_id).'" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> Editar </a>
                     ';
             })
             ->make(true);

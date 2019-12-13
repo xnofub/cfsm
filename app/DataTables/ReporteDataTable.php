@@ -54,7 +54,7 @@ class ReporteDataTable extends DataTable
                 ';
             })
             ->addColumn('responsive', function ($query) {
-                
+
             });
             /*->editColumn('lote_codigo', function($query) {
                 return $query->lote->lote_codigo;
@@ -147,9 +147,10 @@ class ReporteDataTable extends DataTable
             'nota'              => ['name'  => 'nota.nota_nombre', 'title' => 'Nota'],
             'estado'            => ['name'  => 'estado_muestra.estado_muestra_nombre', 'title' => 'Estado'],
             'muestra_cajas'     => ['name'  => 'muestra_cajas', 'title' => 'Cajas'],
-            //'lote_codigo'       => ['name'  => 'lote_codigo', 'title' => 'Lote Código'],
+            'lote_codigo'       => ['name'  => 'lote_codigo', 'title' => 'Código Pallet'],
         ];
     }
+    // 474=8751 y 475=8729
 
     /**
      * Get filename for export.
