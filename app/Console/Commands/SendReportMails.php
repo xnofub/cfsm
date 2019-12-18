@@ -57,8 +57,8 @@ class SendReportMails extends Command
             ];
         }
 
-        Mail::to(['ricardoparramolina@gmail.com','nlopez@ayaconsultora.com'])->send(new SendMailable( json_encode( $data) ));
-        Log::info('se supone que ya envio el mail');
+        Mail::to(['ricardoparramolina@gmail.com','nlopez@ayaconsultora.com','iaraya@ayaconsultora.com'])->send(new SendMailable( json_encode( $data) ));
+        //Log::info('se supone que ya envio el mail');
 
     }
 }

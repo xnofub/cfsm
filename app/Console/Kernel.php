@@ -29,7 +29,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')
         //          ->hourly();
         Log::info('entro a mandar el mail');
-        $schedule->command('report:send')->everyMinute();
+        $schedule->command('report:send')->everyThirtyMinutes();
     }
 
     /**
