@@ -6,6 +6,7 @@ use App\Categoria;
 use App\Mail\SendMailable;
 use App\Muestra;
 use App\Productor;
+use App\Services\ReportService;
 use App\Variedad;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -45,7 +46,9 @@ class SendReportMails extends Command
     public function handle()
     {
         //
-        $muestras = Muestra::limit(100)->get();
+        $service = new ReportService();
+        $data = $service->get();
+        /*$muestras = Muestra::limit(10)->orderBy('created_at')->get();
         $data = [];
 
         foreach ($muestras as $muestra) {
@@ -56,8 +59,12 @@ class SendReportMails extends Command
                 'Categoria' => (Categoria::find($muestra->categoria_id))->categoria_nombre
             ];
         }
+        */
 
-        Mail::to(['ricardoparramolina@gmail.com','nlopez@ayaconsultora.com','iaraya@ayaconsultora.com'])->send(new SendMailable( json_encode( $data) ));
+
+
+        //Mail::to(['ricardoparramolina@gmail.com','nlopez@ayaconsultora.com','iaraya@ayaconsultora.com'])
+        //    ->send(new SendMailable( json_encode( $data) ));
         //Log::info('se supone que ya envio el mail');
 
     }

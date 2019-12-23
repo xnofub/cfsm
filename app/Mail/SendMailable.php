@@ -12,16 +12,18 @@ class SendMailable extends Mailable
     use Queueable, SerializesModels;
 
     public $data;
+    public $nombre_archivo;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($data)
+    public function __construct($data, $nombre_archivo)
     {
         //
         $this->data = $data;
+        $this->nombre_archivo = $nombre_archivo;
     }
 
     /**
@@ -31,7 +33,7 @@ class SendMailable extends Mailable
      */
     public function build()
     {
-        return $this->view('email.registeredcount');
+        return $this->view('email.registeredcount')->attach(public_path()."/reportes/".$this->nombre_archivo.'.pdf');
 
         return $this->view('view.name');
     }

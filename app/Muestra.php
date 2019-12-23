@@ -30,6 +30,7 @@ class Muestra extends Model
         'lote_codigo',
         'estado_muestra_id',
         'apariencia_id',
+        'created_at'
 
     ];
     public $timestamps = true;

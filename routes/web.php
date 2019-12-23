@@ -15,6 +15,8 @@
 Auth::routes();
 Auth::routes(['register' => false]);
 
+Route::get('testg','TestController@index');
+
 #Route::post('/login', 'Auth\LoginController@login');
 Route::get('/', function () {
     if (Auth::check() && isset(Auth::user()->perfil->perfil_nombre)) {
