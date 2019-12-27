@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\Log;
 
 class SendMailable extends Mailable
 {
@@ -22,6 +23,7 @@ class SendMailable extends Mailable
     public function __construct($data, $nombre_archivo)
     {
         //
+        Log::info("entro al consutrctor");
         $this->data = $data;
         $this->nombre_archivo = $nombre_archivo;
     }

@@ -47,17 +47,17 @@ class ReportService
                 $muestrasAll [] = $muestras;
                 //$productor_nombre = str_replace(" ", "_", ($productor->productor_nombre));
                 $nombre_archivo = $nombre_fecha . "_" . $productor->productor_id;
-                Log::info($nombre_archivo);
+                //Log::info($nombre_archivo);
 
                 $flag = $this->generateReport($nombre_archivo, $nombre_fecha, $productor);
 
 
-                //Mail::to(['ricardoparramolina@gmail.com'])
-                //    ->send(new SendMailable(json_encode($muestras), $nombre_archivo));
-
-
-                Mail::to(['ricardoparramolina@gmail.com', 'nlopez@ayaconsultora.com'])
+                Mail::to(['ricardoparramolina@gmail.com'])
                     ->send(new SendMailable(json_encode($muestras), $nombre_archivo));
+
+
+                // Mail::to(['ricardoparramolina@gmail.com', 'nlopez@ayaconsultora.com'])
+                //   ->send(new SendMailable(json_encode($muestras), $nombre_archivo));
             }
             $muestras = [];
         }
@@ -102,6 +102,15 @@ class ReportService
 
     public function generateReport($nombre_reporte, $fecha, $productor)
     {
+
+
+        error_reporting(E_ALL ^ E_DEPRECATED);
+
+
+        $view = \View::make('pdf.reporte', compact('fecha', 'productor'))->render();
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->loadHTML($view);
+        $pdf->save(public_path() . '/reportes/' . $nombre_reporte . '.pdf')->stream('reporte_test');
 
         try {
             $view = \View::make('pdf.reporte', compact('fecha', 'productor'))->render();
@@ -174,7 +183,7 @@ class ReportService
         $pieChart->draw3DPie(370, 290, ["SecondPass" => false, "DrawLabels" => true, "WriteValues" => true, "Radius" => 310]);
 
 
-        $ruta = public_path() . '\grafico.png';
+        $ruta = public_path() . '/grafico.png';
         Log::info($ruta);
         $image->render($ruta);
 
