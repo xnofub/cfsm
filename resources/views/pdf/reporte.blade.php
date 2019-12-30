@@ -26,11 +26,13 @@
 <div class="row">
 
     <div class="form-control">
-        <label align="center"> REPORTE DIARIO DE PRODUCTOR </label>
+        <label align="center"> REPORTE DIARIO DE PRODUCTOR  </label>
+        <br>
     </div>
     <br>
     <div class="form-control">
-        <label align="center"> {{$productor->productor_nombre ?? "caca"}} </label>
+        <label align="center"> {{$productor->productor_nombre ?? "caca"}}  </label>
+        <br>
     </div>
     <br>
     <div class="form-control">
