@@ -34,7 +34,7 @@
                                                 </div>
                                                 <div
                                                     class="h5 mb-0 font-weight-bold text-{{$res['tag']}} text-gray-800">
-                                                    Lotes: {{$res['cantidad']}}</div>
+                                                    Pallets: {{$res['cantidad']}}</div>
                                             </div>
                                             <div class="col-auto">
                                                 <i class="fas fa-plus-circle fa-2x "></i>
