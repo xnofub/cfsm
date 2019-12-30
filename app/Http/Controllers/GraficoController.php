@@ -19,7 +19,7 @@ class GraficoController extends Controller
         //
         $productores = Productor::orderBy('productor_nombre')->get();
 
-        return view('pdf.reporte');
+        //return view('pdf.reporte');
         return view('graficos.productores', compact('productores'));
     }
 
