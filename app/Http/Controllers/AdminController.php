@@ -67,7 +67,7 @@ class AdminController extends Controller
 
         //dd($cantRes);
 
-        return view('pdf.reporte');
+        //return view('pdf.reporte');
         return view('admin.dashboard.dashboard', compact('result', 'data','cantRes','productores','regiones'));
     }
 
