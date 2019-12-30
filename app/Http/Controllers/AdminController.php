@@ -17,6 +17,7 @@ class AdminController extends Controller
     //
     public function index()
     {
+        dd("hola nico");
         //TODO: filtrar por fechas?
         $notas = Nota::all();
         $result = array();
