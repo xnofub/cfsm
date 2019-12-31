@@ -13,7 +13,6 @@ class ReporteController extends Controller
     }
     public function index(ReporteDataTable $dataTable)
     {
-        dd("entro a reporte");
         return $dataTable->render('admin.reportes.index');
         //return view('admin.reportes.index');
     }

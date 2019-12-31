@@ -109,6 +109,7 @@ Route::group(['middleware' => ['web']], function () { #auth
         Route::resource('productorVariedades', 'ProductorVariedadController');
         Route::resource('zonas_defectos', 'ZonaDefectoController');
         Route::resource('reportes', 'ReporteController');
+        Route::get('reporte', 'ReporteController@index');
         Route::resource('graficos', 'GraficoController');
         Route::resource('pallet', 'PaletController');
         Route::get('paletsDatatables', 'PaletController@paletsDatatables');
