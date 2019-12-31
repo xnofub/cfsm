@@ -169,7 +169,7 @@
         @endif
         @if( in_array(Auth::user()->perfil->perfil_nombre, ['Admin','Cliente']) )
           <li class="nav-item">
-            <a class="nav-link" href="{{ url('reportes') }}">
+            <a class="nav-link" href="{{ url('reporte') }}">
               <i class="fas fa-fw fa-table"></i>
               <span>Reportes</span></a>
           </li>
