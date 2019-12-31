@@ -23,7 +23,7 @@ class SendMailable extends Mailable
     public function __construct($data, $nombre_archivo)
     {
         //
-        Log::info("entro al consutrctor");
+        //Log::info("entro al consutrctor");
         $this->data = $data;
         $this->nombre_archivo = $nombre_archivo;
     }
