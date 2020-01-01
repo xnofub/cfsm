@@ -4,6 +4,7 @@
 namespace App\Services;
 
 
+use App\Defecto;
 use App\Mail\SendMailable;
 use App\Muestra;
 use App\MuestraDefecto;
@@ -32,6 +33,7 @@ class ReportService
 
         $muestras = [];
         $muestrasAll = [];
+
         foreach ($productors as $productor) {
             $productor_nombre = str_replace(" ", "_", ($productor->productor_nombre));
 
@@ -89,6 +91,7 @@ class ReportService
             ];
         }
 
+
         $this->setGraph($response);
 
         return (Productor::find($productor->productor_id))->productor_nombre;
@@ -102,12 +105,48 @@ class ReportService
 
     public function generateReport($nombre_reporte, $fecha, $productor)
     {
-
-
         error_reporting(E_ALL ^ E_DEPRECATED);
+        $to = Carbon::now();
+        $from = Carbon::now('-24:00');
+        $productors = Productor::all();
 
 
-        $view = \View::make('pdf.reporte', compact('fecha', 'productor'))->render();
+        $response = false;
+        $data = Muestra::whereBetween('created_at', [$from, $to])
+            ->whereProductorId($productor->productor_id)
+            ->whereIn('nota_id', [3, 4, 5])
+            ->orderBy('nota_id', 'DESC')
+            ->get();
+        Log::info("adsdas");
+        Log::info($data);
+        if (count($data) > 0) {
+            Log::info("entro");
+            //$response [] = $data;
+
+            foreach ($data as $item){
+                $defectos = MuestraDefecto::selectRaw('`muestra_defecto_id`, MAX(`muestra_defecto_calculo`) as muestra_defecto_calculo,`defecto_id`')
+                    ->where('defecto_id','!=',20)
+                    ->whereMuestraId($item->muestra_id)
+                    ->groupBy('muestra_defecto_id')
+                    ->first();
+                Log::info($defectos);
+                $num_muestras = Muestra::where('lote_codigo',$item->lote_codigo)->count() ?? "";
+                $response [] = [
+                    'calificacion' => (Nota::find($item->nota_id))->nota_nombre,
+                    'pallet' => $item->lote_codigo,
+                    'defecto' => (Defecto::find($defectos->defecto_id))->defecto_nombre ?? "",
+                    'porcentaje' => $defectos->muestra_defecto_calculo ?? "",
+                    'num_muestras' => $num_muestras ?? ""
+                ];
+            }
+
+        }
+
+
+        Log::info($response);
+
+
+        $view = \View::make('pdf.reporte', compact('fecha', 'productor', 'response'))->render();
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view);
         $pdf->save(public_path() . '/reportes/' . $nombre_reporte . '.pdf')->stream('reporte_test');
@@ -118,6 +157,7 @@ class ReportService
             $pdf->loadHTML($view);
             $pdf->save(public_path() . '/reportes/' . $nombre_reporte . '.pdf')->stream('reporte_test');
 
+            Log::info("termino lawea");
             return true;
         } catch (\Exception $e) {
             return false;

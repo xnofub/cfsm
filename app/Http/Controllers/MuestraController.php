@@ -1223,8 +1223,8 @@ class MuestraController extends Controller
         , m.`nota_id`
         , n.`nota_nombre`
         , a.`apariencia_nombre`
-        , em.embalaje_nombre
-        , p.productor_nombre
+        , em.`embalaje_nombre`
+        , p.`productor_nombre`
                ,SUM(
                        IF(f.defecto_id=1
                        ,   d.`muestra_defecto_calculo`

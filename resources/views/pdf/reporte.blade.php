@@ -31,8 +31,37 @@
 
 <div>
     <img src="grafico.png">
-    <br>
 </div>
+
+@if($response)
+    <hr>
+    <div>
+        <table border="1">
+            <thead>
+            <tr>
+                <td>Calificacion</td>
+                <td>Numero de Pallet</td>
+                <td>Defecto</td>
+                <td>Porcentaje</td>
+                <td>Numero de Muestras</td>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach($response as $item)
+                <tr>
+                    <td>{{$item['calificacion']}}</td>
+                    <td>{{$item['pallet']}}</td>
+                    <td>{{$item['defecto']}}</td>
+                    <td>{{$item['porcentaje']}}</td>
+                    <td>{{$item['num_muestras']}}</td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+    </div>
+
+@endif
+
 
 </body>
 </html>
