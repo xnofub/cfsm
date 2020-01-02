@@ -127,7 +127,7 @@ class ReportService
                 $defectos = MuestraDefecto::selectRaw('`muestra_defecto_id`, MAX(`muestra_defecto_calculo`) as muestra_defecto_calculo,`defecto_id`')
                     ->where('defecto_id','!=',20)
                     ->whereMuestraId($item->muestra_id)
-                    ->groupBy('muestra_defecto_id')
+                    ->groupBy('muestra_defecto_id','defecto_id')
                     ->first();
                 Log::info($defectos);
                 $num_muestras = Muestra::where('lote_codigo',$item->lote_codigo)->count() ?? "";
