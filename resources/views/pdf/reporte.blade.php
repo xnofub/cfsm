@@ -15,6 +15,13 @@
 
         </div>
     </div>
+
+    <div class="logo" align="right">
+        <div>
+            <img src="logo_santa_maria.png">
+
+        </div>
+    </div>
 </div>
 <br>
 <br>

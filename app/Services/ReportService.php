@@ -129,7 +129,7 @@ class ReportService
                     ->whereMuestraId($item->muestra_id)
                     ->groupBy('muestra_defecto_id','defecto_id')
                     ->first();
-                Log::info($defectos);
+                //Log::info($defectos);
                 $num_muestras = Muestra::where('lote_codigo',$item->lote_codigo)->count() ?? "";
                 $response [] = [
                     'calificacion' => (Nota::find($item->nota_id))->nota_nombre,
@@ -143,7 +143,7 @@ class ReportService
         }
 
 
-        Log::info($response);
+        //Log::info($response);
 
 
         $view = \View::make('pdf.reporte', compact('fecha', 'productor', 'response'))->render();
@@ -220,11 +220,11 @@ class ReportService
 
         /* Draw a simple pie chart */
 
-        $pieChart->draw3DPie(370, 290, ["SecondPass" => false, "DrawLabels" => true, "WriteValues" => true, "Radius" => 310]);
+        $pieChart->draw2DPie(370, 290, ["Border" => false,"SecondPass" => false, "DrawLabels" => true, "WriteValues" => true, "Radius" => 240, "ValuePosition" => PIE_VALUE_INSIDE]);
 
 
         $ruta = public_path() . '/grafico.png';
-        Log::info($ruta);
+        //Log::info($ruta);
         chmod($ruta,0777);
         $image->render($ruta);
 
