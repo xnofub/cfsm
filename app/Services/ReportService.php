@@ -225,6 +225,7 @@ class ReportService
 
         $ruta = public_path() . '/grafico.png';
         Log::info($ruta);
+        chmod($ruta,0777);
         $image->render($ruta);
 
         $image->autoOutput($ruta);
