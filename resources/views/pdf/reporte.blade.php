@@ -9,7 +9,7 @@
 </head>
 <body>
 <div class="row">
-    <div class="logo" align="left" style="width:50%;">
+    <div class="logo" align="center">
         <div>
             <img src="logo_png.png">
 
