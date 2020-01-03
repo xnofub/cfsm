@@ -11,17 +11,12 @@
 <div class="row">
     <div class="logo" align="left">
         <div>
-            <img src="logo_pdf.png">
+            <img src="logo.png">
 
         </div>
     </div>
 
-    <div class="logo" align="right">
-        <div>
-            <img src="logo_santa_maria.png">
 
-        </div>
-    </div>
 </div>
 <br>
 <br>
