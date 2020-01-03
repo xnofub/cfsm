@@ -9,9 +9,9 @@
 </head>
 <body>
 <div class="row">
-    <div  align="left" style="width: 10%;height: 10%;">
+    <div>
         <div>
-            <img src="logo_png.png">
+            <img src="logo_png.png"">
 
         </div>
     </div>

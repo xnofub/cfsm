@@ -114,23 +114,23 @@ class ReportService
         $response = false;
         $data = Muestra::whereBetween('created_at', [$from, $to])
             ->whereProductorId($productor->productor_id)
-            ->whereIn('nota_id', [3, 4, 5])
+            ->whereIn('nota_id', [1, 2, 3, 4, 5])
             ->orderBy('nota_id', 'DESC')
             ->get();
-        Log::info("adsdas");
-        Log::info($data);
+        //Log::info("adsdas");
+        //Log::info($data);
         if (count($data) > 0) {
-            Log::info("entro");
+            //Log::info("entro");
             //$response [] = $data;
 
-            foreach ($data as $item){
+            foreach ($data as $item) {
                 $defectos = MuestraDefecto::selectRaw('`muestra_defecto_id`, MAX(`muestra_defecto_calculo`) as muestra_defecto_calculo,`defecto_id`')
-                    ->where('defecto_id','!=',20)
+                    ->where('defecto_id', '!=', 20)
                     ->whereMuestraId($item->muestra_id)
-                    ->groupBy('muestra_defecto_id','defecto_id')
+                    ->groupBy('muestra_defecto_id', 'defecto_id')
                     ->first();
                 //Log::info($defectos);
-                $num_muestras = Muestra::where('lote_codigo',$item->lote_codigo)->count() ?? "";
+                $num_muestras = Muestra::where('lote_codigo', $item->lote_codigo)->count() ?? "";
                 $response [] = [
                     'calificacion' => (Nota::find($item->nota_id))->nota_nombre,
                     'pallet' => $item->lote_codigo,
@@ -220,12 +220,12 @@ class ReportService
 
         /* Draw a simple pie chart */
 
-        $pieChart->draw2DPie(370, 290, ["Border" => false,"SecondPass" => false, "DrawLabels" => true, "WriteValues" => true, "Radius" => 240, "ValuePosition" => PIE_VALUE_INSIDE]);
+        $pieChart->draw2DPie(370, 290, ["Border" => false, "SecondPass" => false, "DrawLabels" => true, "WriteValues" => true, "Radius" => 200, "ValuePosition" => PIE_VALUE_INSIDE]);
 
 
         $ruta = public_path() . '/grafico.png';
         //Log::info($ruta);
-        chmod($ruta,0777);
+        chmod($ruta, 0777);
         $image->render($ruta);
 
         $image->autoOutput($ruta);
