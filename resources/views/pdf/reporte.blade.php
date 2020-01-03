@@ -11,8 +11,7 @@
 <div class="row">
     <div>
         <div>
-            <img src="logo_new.png">
-
+            <img src="logonuevo.png">
         </div>
     </div>
 
