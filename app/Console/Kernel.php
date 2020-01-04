@@ -29,6 +29,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')
         //          ->hourly();
         //Log::info('entro a mandar el mail');
+        //31 4 * * * php /var/www/html/controlcalidad/artisan schedule:run
         $schedule->command('report:send')->everyMinute();
     }
 

@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Defecto;
 use App\Mail\SendMailable;
+use App\MailingList;
 use App\Muestra;
 use App\MuestraDefecto;
 use App\Nota;
@@ -54,17 +55,23 @@ class ReportService
                 $flag = $this->generateReport($nombre_archivo, $nombre_fecha, $productor);
 
                 $datos_correo = [
-                    'subject' => "Reporte ".$nombre_fecha." - ".$productor->productor_nombre,
+                    'subject' => "Reporte " . $nombre_fecha . " - " . $productor->productor_nombre,
                     'body' => "Reporte diario de calidad"
                 ];
 
+                $mailingTo = ['ricardoparramolina@gmail.com', 'nlopez@ayaconsultora.com'];
 
-                Mail::to(['ricardoparramolina@gmail.com'])
+                $mailingList = MailingList::whereProductorId($productor->productor_id)->first();
+                $text = $mailingList->mailing_list ?? "";
+                if ($mailingList != "") {
+                    $mailingTo = explode(";", $mailingList->mailing_list);
+                }
+                //dd($mailingList);
+
+                //dd($mailingTo);
+                Mail::to($mailingTo)
                     ->send(new SendMailable($datos_correo, $nombre_archivo));
 
-
-                // Mail::to(['ricardoparramolina@gmail.com', 'nlopez@ayaconsultora.com'])
-                //   ->send(new SendMailable(json_encode($muestras), $nombre_archivo));
             }
             $muestras = [];
         }
@@ -134,7 +141,7 @@ class ReportService
                     ->whereMuestraId($item->muestra_id)
                     ->groupBy('muestra_defecto_id', 'defecto_id')
                     ->first();
-                if($defectos == null) {
+                if ($defectos == null) {
                     $defectos = MuestraDefecto::selectRaw('`muestra_defecto_id`, MAX(`muestra_defecto_calculo`) as muestra_defecto_calculo,`defecto_id`')
                         ->whereMuestraId($item->muestra_id)
                         ->groupBy('muestra_defecto_id', 'defecto_id')
