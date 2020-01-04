@@ -59,7 +59,7 @@ class ReportService
                     'body' => "Reporte diario de calidad"
                 ];
 
-                $mailingTo = ['ricardoparramolina@gmail.com', 'nlopez@ayaconsultora.com'];
+                $mailingTo = ['ricardoparramolina@gmail.com', 'nlopez@ayaconsultora.com','rodrigor@cfsm.cl','iaraya@ayaconsultora.com'];
 
                 $mailingList = MailingList::whereProductorId($productor->productor_id)->first();
                 $text = $mailingList->mailing_list ?? "";
