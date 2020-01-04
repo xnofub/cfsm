@@ -169,7 +169,7 @@ class ReportService
             $pdf->loadHTML($view);
             $pdf->save(public_path() . '/reportes/' . $nombre_reporte . '.pdf')->stream('reporte_test');
 
-            Log::info("termino lawea");
+            //Log::info("termino lawea");
             return true;
         } catch (\Exception $e) {
             return false;

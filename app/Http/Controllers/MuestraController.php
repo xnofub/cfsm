@@ -1367,7 +1367,7 @@ class MuestraController extends Controller
         , a.`apariencia_nombre`
         , p.productor_nombre
         ';
-        Log::info($statement);
+        //Log::info($statement);
         $consolidado = DB::select(DB::raw($statement));
 
         $spreadsheet = new Spreadsheet();
