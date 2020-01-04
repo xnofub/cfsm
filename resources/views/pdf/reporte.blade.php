@@ -37,11 +37,12 @@
         <table border="1">
             <thead>
             <tr>
-                <td>Calificacion</td>
-                <td>Numero de Pallet</td>
+                <td>Nota</td>
+                <td>Num. de Pallet</td>
+                <td>Variedad</td>
                 <td>Defecto</td>
                 <td>Porcentaje</td>
-                <td>Numero de Muestras</td>
+                <td>Num. de Muestras</td>
             </tr>
             </thead>
             <tbody>
@@ -49,6 +50,7 @@
                 <tr>
                     <td>{{$item['calificacion']}}</td>
                     <td>{{$item['pallet']}}</td>
+                    <td>{{$item['variedad']}}</td>
                     <td>{{$item['defecto']}}</td>
                     <td>{{$item['porcentaje']}}</td>
                     <td>{{$item['num_muestras']}}</td>

@@ -35,7 +35,11 @@ class SendMailable extends Mailable
      */
     public function build()
     {
-        return $this->view('email.registeredcount')->attach(public_path()."/reportes/".$this->nombre_archivo.'.pdf');
+        return $this->from('info@ayaconsultora.com', 'INFO A&A')
+                ->replyTo('nlopez@ayaconsultora.com')
+                ->subject($this->data['subject'])
+                ->view('email.registeredcount')
+                ->attach(public_path()."/reportes/".$this->nombre_archivo.'.pdf');
 
         return $this->view('view.name');
     }

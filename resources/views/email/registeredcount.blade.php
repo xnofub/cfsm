@@ -1,3 +1,3 @@
 <div>
-    Los ultimos 100 reportes son: {{$data}}
+    <h3>{{$data['body']}}</h3>
 </div>

@@ -53,9 +53,14 @@ class ReportService
 
                 $flag = $this->generateReport($nombre_archivo, $nombre_fecha, $productor);
 
+                $datos_correo = [
+                    'subject' => "Reporte ".$nombre_fecha." - ".$productor->productor_nombre,
+                    'body' => "Reporte diario de calidad"
+                ];
+
 
                 Mail::to(['ricardoparramolina@gmail.com'])
-                    ->send(new SendMailable(json_encode($muestras), $nombre_archivo));
+                    ->send(new SendMailable($datos_correo, $nombre_archivo));
 
 
                 // Mail::to(['ricardoparramolina@gmail.com', 'nlopez@ayaconsultora.com'])
@@ -134,6 +139,7 @@ class ReportService
                 $response [] = [
                     'calificacion' => (Nota::find($item->nota_id))->nota_nombre,
                     'pallet' => $item->lote_codigo,
+                    'variedad' => (Variedad::find($item->variedad_id))->variedad_nombre ?? "",
                     'defecto' => (Defecto::find($defectos->defecto_id))->defecto_nombre ?? "",
                     'porcentaje' => $defectos->muestra_defecto_calculo ?? "",
                     'num_muestras' => $num_muestras ?? ""
