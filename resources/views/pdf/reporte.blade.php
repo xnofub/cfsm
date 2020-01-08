@@ -31,7 +31,32 @@
     <img src="grafico.png">
 </div>
 
+@if($cantidadShow)
+    <hr>
+    <div>
+        <table border="1">
+            <thead>
+            <tr>
+                <td>Nota</td>
+                <td>Cantidad  de Pallet</td>
+                <td>Numero de Muestras</td>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach($cantidad as $item => $value)
+                <tr>
+                    <td>{{$item}}</td>
+                    <td>{{$value['pallets']}}</td>
+                    <td>{{$value['muestras']}}</td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+    </div>
+@endif
+
 @if($response)
+    <br>
     <hr>
     <div>
         <table border="1">
@@ -59,7 +84,6 @@
             </tbody>
         </table>
     </div>
-
 @endif
 
 

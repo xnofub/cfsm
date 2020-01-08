@@ -59,12 +59,12 @@ class ReportService
                     'body' => "Reporte diario de calidad"
                 ];
 
-                $mailingTo = ['ricardoparramolina@gmail.com', 'nlopez@ayaconsultora.com','rodrigor@cfsm.cl','iaraya@ayaconsultora.com'];
+                $mailingTo = ['ricardoparramolina@gmail.com', 'nlopezj@ayaconsultora.com', 'as@as.cl', 'iaraya2@ayaconsultora.com'];
 
                 $mailingList = MailingList::whereProductorId($productor->productor_id)->first();
                 $text = $mailingList->mailing_list ?? "";
                 if ($mailingList != "") {
-                    $mailingTo = explode(";", $mailingList->mailing_list);
+                    //$mailingTo = explode(";", $mailingList->mailing_list);
                 }
                 //dd($mailingList);
 
@@ -132,10 +132,8 @@ class ReportService
         //Log::info("adsdas");
         //Log::info($data);
         if (count($data) > 0) {
-            //Log::info("entro");
-            //$response [] = $data;
-
             foreach ($data as $item) {
+
                 $defectos = MuestraDefecto::selectRaw('`muestra_defecto_id`, MAX(`muestra_defecto_calculo`) as muestra_defecto_calculo,`defecto_id`')
                     ->where('defecto_id', '!=', 20)
                     ->whereMuestraId($item->muestra_id)
@@ -158,14 +156,33 @@ class ReportService
                     'num_muestras' => $num_muestras ?? ""
                 ];
             }
-
         }
 
+
+        $cantidad['A']['pallets'] = 0;
+        $cantidad['A']['muestras'] = 0;
+        $cantidad['B']['pallets'] = 0;
+        $cantidad['B']['muestras'] = 0;
+        $cantidad['C']['pallets'] = 0;
+        $cantidad['C']['muestras'] = 0;
+        $cantidad['O']['pallets'] = 0;
+        $cantidad['O']['muestras'] = 0;
+        $cantidad['X']['pallets'] = 0;
+        $cantidad['X']['muestras'] = 0;
+        $cantidadShow = false;
+        foreach ($response as $item) {
+            $cantidadShow = true;
+            $cantidad[$item['calificacion']]['pallets']++;
+            $cantidad[$item['calificacion']]['muestras'] += $item['num_muestras'];
+            $cantidad[$item['calificacion']]['label'] = $item['calificacion'];
+        }
+
+        //Log::info(json_encode($cantidad));
 
         //Log::info($response);
 
 
-        $view = \View::make('pdf.reporte', compact('fecha', 'productor', 'response'))->render();
+        $view = \View::make('pdf.reporte', compact('fecha', 'productor', 'response', 'cantidad', 'cantidadShow'))->render();
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view);
         $pdf->save(public_path() . '/reportes/' . $nombre_reporte . '.pdf')->stream('reporte_test');
