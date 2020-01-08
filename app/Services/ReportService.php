@@ -145,13 +145,18 @@ class ReportService
                         ->groupBy('muestra_defecto_id', 'defecto_id')
                         ->first();
                 }
+                if($defectos == null){
+                    $def = "-";
+                }else{
+                    $def = (Defecto::find($defectos->defecto_id))->defecto_nombre;
+                }
                 //Log::info($defectos);
                 $num_muestras = Muestra::where('lote_codigo', $item->lote_codigo)->count() ?? "";
                 $response [] = [
                     'calificacion' => (Nota::find($item->nota_id))->nota_nombre,
                     'pallet' => $item->lote_codigo,
                     'variedad' => (Variedad::find($item->variedad_id))->variedad_nombre ?? "",
-                    'defecto' => (Defecto::find($defectos->defecto_id))->defecto_nombre ?? "",
+                    'defecto' =>  $def,
                     'porcentaje' => $defectos->muestra_defecto_calculo ?? "",
                     'num_muestras' => $num_muestras ?? ""
                 ];
