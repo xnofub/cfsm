@@ -70,6 +70,7 @@ class ReportService
 
                 //dd($mailingTo);
 
+
                 //Mail::to($mailingTo)
                 //    ->send(new SendMailable($datos_correo, $nombre_archivo));
 
