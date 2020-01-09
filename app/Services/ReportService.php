@@ -66,11 +66,12 @@ class ReportService
                 if ($mailingList != "") {
                     $mailingTo = explode(";", $mailingList->mailing_list);
                 }
-                //dd($mailingList);
+                Log::info($mailingList);
 
                 //dd($mailingTo);
-                Mail::to($mailingTo)
-                    ->send(new SendMailable($datos_correo, $nombre_archivo));
+
+                //Mail::to($mailingTo)
+                //    ->send(new SendMailable($datos_correo, $nombre_archivo));
 
             }
             $muestras = [];
