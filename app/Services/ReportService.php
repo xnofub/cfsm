@@ -63,10 +63,12 @@ class ReportService
 
                 $mailingList = MailingList::whereProductorId($productor->productor_id)->first();
                 $text = $mailingList->mailing_list ?? "";
-                if ($mailingList != "") {
-                    $mailingTo = explode(";", $mailingList->mailing_list);
+                if ($text != "") {
+                    $mailingTo = explode(";", $text);
                 }
-                Log::info($mailingList);
+                Log::info($text);
+                Log::info("ahora viene el otro");
+                Log::info(json_encode($mailingTo));
 
                 //dd($mailingTo);
 
