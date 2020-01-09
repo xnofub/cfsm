@@ -66,15 +66,15 @@ class ReportService
                 if ($text != "") {
                     $mailingTo = explode(";", $text);
                 }
-                Log::info($text);
-                Log::info("ahora viene el otro");
-                Log::info(json_encode($mailingTo));
+                //Log::info($text);
+                //Log::info("ahora viene el otro");
+                //Log::info(json_encode($mailingTo));
 
                 //dd($mailingTo);
 
 
-                //Mail::to($mailingTo)
-                //    ->send(new SendMailable($datos_correo, $nombre_archivo));
+                Mail::to($mailingTo)
+                    ->send(new SendMailable($datos_correo, $nombre_archivo));
 
             }
             $muestras = [];
