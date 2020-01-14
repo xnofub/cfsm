@@ -9,6 +9,7 @@ use App\Mail\SendMailable;
 use App\MailingList;
 use App\Muestra;
 use App\MuestraDefecto;
+use App\MuestraImagen;
 use App\Nota;
 use App\Productor;
 use App\Variedad;
@@ -125,18 +126,31 @@ class ReportService
         $to = Carbon::now();
         $from = Carbon::now('-24:00');
         $productors = Productor::all();
+        $images = [];
 
 
         $response = false;
         $data = Muestra::whereBetween('created_at', [$from, $to])
             ->whereProductorId($productor->productor_id)
-            ->whereIn('nota_id', [1, 2, 3, 4, 5])
+            ->whereIn('nota_id', [3, 4])
             ->orderBy('nota_id', 'DESC')
             ->get();
         //Log::info("adsdas");
         //Log::info($data);
+        $imagesShow = false;
         if (count($data) > 0) {
             foreach ($data as $item) {
+                $imagenesMuestra = MuestraImagen::whereMuestraId($item->muestra_id)->get();
+                if ($imagenesMuestra != null) {
+                    foreach ($imagenesMuestra as $img ){
+                        $imagesShow = false;
+                        $images [] = [
+                            'path' => base_path().'/public/'.$img->muestra_imagen_ruta_corta,
+                            'description' => $img->muestra_imagen_texto
+                        ];
+                    }
+
+                }
 
                 $defectos = MuestraDefecto::selectRaw('`muestra_defecto_id`, MAX(`muestra_defecto_calculo`) as muestra_defecto_calculo,`defecto_id`')
                     ->where('defecto_id', '!=', 20)
@@ -149,9 +163,9 @@ class ReportService
                         ->groupBy('muestra_defecto_id', 'defecto_id')
                         ->first();
                 }
-                if($defectos == null){
+                if ($defectos == null) {
                     $def = "-";
-                }else{
+                } else {
                     $def = (Defecto::find($defectos->defecto_id))->defecto_nombre;
                 }
                 //Log::info($defectos);
@@ -160,12 +174,13 @@ class ReportService
                     'calificacion' => (Nota::find($item->nota_id))->nota_nombre,
                     'pallet' => $item->lote_codigo,
                     'variedad' => (Variedad::find($item->variedad_id))->variedad_nombre ?? "",
-                    'defecto' =>  $def,
+                    'defecto' => $def,
                     'porcentaje' => $defectos->muestra_defecto_calculo ?? "",
                     'num_muestras' => $num_muestras ?? ""
                 ];
             }
         }
+        Log::info($images);
 
 
         $cantidad['A']['pallets'] = 0;
@@ -188,10 +203,11 @@ class ReportService
 
         //Log::info(json_encode($cantidad));
 
+
         //Log::info($response);
 
 
-        $view = \View::make('pdf.reporte', compact('fecha', 'productor', 'response', 'cantidad', 'cantidadShow'))->render();
+        $view = \View::make('pdf.reporte', compact('fecha', 'productor', 'response', 'cantidad', 'cantidadShow','images','imagesShow'))->render();
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view);
         $pdf->save(public_path() . '/reportes/' . $nombre_reporte . '.pdf')->stream('reporte_test');

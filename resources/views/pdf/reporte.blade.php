@@ -38,7 +38,7 @@
             <thead>
             <tr>
                 <td>Nota</td>
-                <td>Cantidad  de Pallet</td>
+                <td>Cantidad de Pallet</td>
                 <td>Numero de Muestras</td>
             </tr>
             </thead>
@@ -84,6 +84,17 @@
             </tbody>
         </table>
     </div>
+@endif
+
+@if($imagesShow)
+    @foreach($images as $image)
+        <br>
+        <hr>
+        <div>
+            <label>{{$image['description']}}</label>
+            <img src="{{$image['path']}}" alt="$image">
+        </div>
+    @endforeach
 @endif
 
 
