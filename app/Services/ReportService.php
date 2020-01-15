@@ -129,7 +129,7 @@ class ReportService
         $images = [];
 
 
-        $response = false;
+        $response = [];
         $data = Muestra::whereBetween('created_at', [$from, $to])
             ->whereProductorId($productor->productor_id)
             ->whereIn('nota_id', [3, 4])
@@ -146,10 +146,10 @@ class ReportService
                         $imagesShow = false;
                         $images [] = [
                             'path' => base_path().'/public/'.$img->muestra_imagen_ruta_corta,
-                            'description' => $img->muestra_imagen_texto
+                            'description' => $img->muestra_imagen_texto,
+
                         ];
                     }
-
                 }
 
                 $defectos = MuestraDefecto::selectRaw('`muestra_defecto_id`, MAX(`muestra_defecto_calculo`) as muestra_defecto_calculo,`defecto_id`')
@@ -180,7 +180,7 @@ class ReportService
                 ];
             }
         }
-        Log::info($images);
+        //Log::info($images);
 
 
         $cantidad['A']['pallets'] = 0;

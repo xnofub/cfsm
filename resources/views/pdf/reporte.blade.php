@@ -89,10 +89,12 @@
 @if($imagesShow)
     @foreach($images as $image)
         <br>
+        <br>
+        <br>
         <hr>
         <div>
             <label>{{$image['description']}}</label>
-            <img src="{{$image['path']}}" alt="$image">
+            <img src="{{$image['path']}}" alt="{{$image['description']}}">
         </div>
     @endforeach
 @endif
