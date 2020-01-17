@@ -29,6 +29,8 @@ class ReportService
         $nombre_fecha = $to->toDateString();
 
         $from = Carbon::now('-24:00');
+        //$from = '2020-01-16 21:03:00';
+        //$to = '2020-01-16 22:10:00';
 
         $productors = $this->getProductores();
         //return $this->generateReport();
@@ -57,10 +59,12 @@ class ReportService
 
                 $datos_correo = [
                     'subject' => "Reporte " . $nombre_fecha . " - " . $productor->productor_nombre,
-                    'body' => "Reporte diario de calidad"
+                    'body' => "Reporte diario de calidad",
+                    'images' => $flag
                 ];
 
                 $mailingTo = ['ricardoparramolina@gmail.com', 'nlopez@ayaconsultora.com','rodrigor@cfsm.cl'];
+                //$mailingTo = ['ricardoparramolina@gmail.com'];
 
                 $mailingList = MailingList::whereProductorId($productor->productor_id)->first();
                 $text = $mailingList->mailing_list ?? "";
@@ -72,12 +76,15 @@ class ReportService
                 //Log::info(json_encode($mailingTo));
 
                 //dd($mailingTo);
+                //Log::info($datos_correo);
 
 
                 Mail::to($mailingTo)
                     ->send(new SendMailable($datos_correo, $nombre_archivo));
+                //dd("envio uno");
 
             }
+            //dd("termino");
             $muestras = [];
         }
         return $muestrasAll;
@@ -94,6 +101,7 @@ class ReportService
         $response = null;
         foreach ($data as $item) {
             $defectos = $this->getDefectosByMuestra($item->muestra_id);
+            //dd($item->variedad_id);
             $response [] = [
                 'variedad' => [
                     'nombre' => (Variedad::find($item->variedad_id))->variedad_nombre,
@@ -126,13 +134,16 @@ class ReportService
         $to = Carbon::now();
         $from = Carbon::now('-24:00');
         $productors = Productor::all();
+
+        //$from = '2020-01-16 21:03:00';
+        //$to = '2020-01-16 22:10:00';
         $images = [];
 
 
         $response = [];
         $data = Muestra::whereBetween('created_at', [$from, $to])
             ->whereProductorId($productor->productor_id)
-            ->whereIn('nota_id', [3, 4])
+            ->whereIn('nota_id', [1,2,3, 4])
             ->orderBy('nota_id', 'DESC')
             ->get();
         //Log::info("adsdas");
@@ -146,7 +157,9 @@ class ReportService
                         $imagesShow = false;
                         $images [] = [
                             'path' => base_path().'/public/'.$img->muestra_imagen_ruta_corta,
+                            'url' => $img->muestra_imagen_ruta,
                             'description' => $img->muestra_imagen_texto,
+                            'pallet' => $item->lote_codigo
 
                         ];
                     }
@@ -207,19 +220,19 @@ class ReportService
         //Log::info($response);
 
 
-        $view = \View::make('pdf.reporte', compact('fecha', 'productor', 'response', 'cantidad', 'cantidadShow','images','imagesShow'))->render();
-        $pdf = \App::make('dompdf.wrapper');
-        $pdf->loadHTML($view);
-        $pdf->save(public_path() . '/reportes/' . $nombre_reporte . '.pdf')->stream('reporte_test');
+        //$view = \View::make('pdf.reporte', compact('fecha', 'productor', 'response', 'cantidad', 'cantidadShow','images','imagesShow'))->render();
+        //$pdf = \App::make('dompdf.wrapper');
+        //$pdf->loadHTML($view);
+        //$pdf->save(public_path() . '/reportes/' . $nombre_reporte . '.pdf')->stream('reporte_test');
 
         try {
-            $view = \View::make('pdf.reporte', compact('fecha', 'productor'))->render();
+            $view = \View::make('pdf.reporte', compact('fecha', 'productor', 'response', 'cantidad', 'cantidadShow','images','imagesShow'))->render();
             $pdf = \App::make('dompdf.wrapper');
             $pdf->loadHTML($view);
             $pdf->save(public_path() . '/reportes/' . $nombre_reporte . '.pdf')->stream('reporte_test');
 
             //Log::info("termino lawea");
-            return true;
+            return $images;
         } catch (\Exception $e) {
             return false;
         }

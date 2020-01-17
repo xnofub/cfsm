@@ -14,6 +14,7 @@ class SendMailable extends Mailable
 
     public $data;
     public $nombre_archivo;
+    public $imagenes;
 
     /**
      * Create a new message instance.
@@ -35,11 +36,13 @@ class SendMailable extends Mailable
      */
     public function build()
     {
+        $urls = $this->data['images'];
+        //dd($urls);
         return $this->from('info@ayaconsultora.com', 'INFO A&A')
-                ->replyTo('nlopez@ayaconsultora.com')
-                ->subject($this->data['subject'])
-                ->view('email.registeredcount')
-                ->attach(public_path()."/reportes/".$this->nombre_archivo.'.pdf');
+            ->replyTo('nlopez@ayaconsultora.com')
+            ->subject($this->data['subject'])
+            ->view('email.registeredcount', compact('urls'))
+            ->attach(public_path() . "/reportes/" . $this->nombre_archivo . '.pdf');
 
         return $this->view('view.name');
     }

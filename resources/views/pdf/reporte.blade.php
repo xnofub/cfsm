@@ -72,14 +72,16 @@
             </thead>
             <tbody>
             @foreach($response as $item)
-                <tr>
-                    <td>{{$item['calificacion']}}</td>
-                    <td>{{$item['pallet']}}</td>
-                    <td>{{$item['variedad']}}</td>
-                    <td>{{$item['defecto']}}</td>
-                    <td>{{$item['porcentaje']}}</td>
-                    <td>{{$item['num_muestras']}}</td>
-                </tr>
+                @if($item['calificacion'] == 'C' || $item['calificacion'] == 'O')
+                    <tr>
+                        <td>{{$item['calificacion']}}</td>
+                        <td>{{$item['pallet']}}</td>
+                        <td>{{$item['variedad']}}</td>
+                        <td>{{$item['defecto']}}</td>
+                        <td>{{$item['porcentaje']}}</td>
+                        <td>{{$item['num_muestras']}}</td>
+                    </tr>
+                @endif
             @endforeach
             </tbody>
         </table>
