@@ -54,8 +54,9 @@ class ReportService
                 //$productor_nombre = str_replace(" ", "_", ($productor->productor_nombre));
                 $nombre_archivo = $nombre_fecha . "_" . $productor->productor_id;
                 //Log::info($nombre_archivo);
+                //dd($muestras);
 
-                $flag = $this->generateReport($nombre_archivo, $nombre_fecha, $productor);
+                $flag = $this->generateReport($nombre_archivo, $nombre_fecha, $productor, $muestras);
 
                 $datos_correo = [
                     'subject' => "Reporte " . $nombre_fecha . " - " . $productor->productor_nombre,
@@ -63,7 +64,7 @@ class ReportService
                     'images' => $flag
                 ];
 
-                $mailingTo = ['ricardoparramolina@gmail.com', 'nlopez@ayaconsultora.com','rodrigor@cfsm.cl'];
+                $mailingTo = ['ricardoparramolina@gmail.com', 'nlopez@ayaconsultora.com', 'rodrigor@cfsm.cl'];
                 //$mailingTo = ['ricardoparramolina@gmail.com'];
 
                 $mailingList = MailingList::whereProductorId($productor->productor_id)->first();
@@ -108,6 +109,7 @@ class ReportService
                     'id' => $item->variedad_id
                 ],
                 'numero_pallet' => $item->lote_codigo,
+                'qr' => $item->muestra_qr,
                 'nota' => [
                     'id' => $item->nota_id,
                     'nombre' => (Nota::find($item->nota_id))->nota_nombre,
@@ -115,11 +117,100 @@ class ReportService
                 ],
             ];
         }
+        //dd($response);
+        $pallets = [];
+        foreach ($response as $item) {
+            $pallets[$item['numero_pallet']][] = $item;
+        }
+
+        $var = $this->getPalletCalification($pallets);
+        //dd($var);
 
 
-        $this->setGraph($response);
+        //$this->setGraph($var);
+
+        return $var;
 
         return (Productor::find($productor->productor_id))->productor_nombre;
+    }
+
+    public function getPalletCalification($pallets)
+    {
+        $response = [];
+        foreach ($pallets as $pallet) {
+            $pallet['nota_final'] = $this->getIndividualPalletCalification($pallet);
+            $response [] = $pallet;
+        }
+
+        return $response;
+    }
+
+    public function getIndividualPalletCalification($pallet)
+    {
+
+        $notas = [];
+        $notasLetra['A'] = 0;
+        $notasLetra['B'] = 0;
+        $notasLetra['C'] = 0;
+        $notasLetra['O'] = 0;
+        $notasLetra['X'] = 0;
+        foreach ($pallet as $key => $muestra) {
+            $notas [] = $muestra['nota']['nombre'];
+            $notasLetra[$muestra['nota']['nombre']]++;
+        }
+        $notasCount = count($pallet);
+        if ($notasCount == 1) {
+            $nota = $notas[0];
+            return $nota;
+
+        }
+        if ($notasCount == 2) {
+            if ($notasLetra['C'] == 2) {
+                $nota = 'C';
+                return $nota;
+            } else {
+                if ($notasLetra['O'] == 2) {
+                    $nota = 'O';
+                    return $nota;
+                }
+                if ($notasLetra['C'] > 0) {
+                    $nota = 'C';
+                    //return $nota;
+                }
+                if ($notasLetra['B'] > 0) {
+                    $nota = 'B';
+                    return $nota;
+                }
+                if ($notasLetra['A'] > 0) {
+                    $nota = 'A';
+                    return $nota;
+                }
+            }
+        }
+
+        if ($notasCount == 3) {
+            if ($notasLetra['O'] >= 2) {
+                $nota = 'O';
+                return $nota;
+            }
+            if ($notasLetra['O'] == 1) {
+                if (($notasLetra['A'] + $notasLetra['B'] + $notasLetra['C']) == 2) {
+                    $nota = 'C';
+                    return $nota;
+                }
+            }
+            if ($notasLetra['A'] + $notasLetra['B'] == 2 && $notasLetra['C'] == 1) {
+                $nota = 'B';
+                return $nota;
+            }
+            if ($notasLetra['A'] + $notasLetra['B'] == 1 && $notasLetra['C'] == 2) {
+                $nota = 'C';
+                return $nota;
+            }
+        }
+        return 'X';
+        return $pallet;
+
     }
 
     public function getDefectosByMuestra($muestraId)
@@ -128,7 +219,7 @@ class ReportService
         return MuestraDefecto::whereMuestraId($muestraId)->get();
     }
 
-    public function generateReport($nombre_reporte, $fecha, $productor)
+    public function generateReport($nombre_reporte, $fecha, $productor, $muestras)
     {
         error_reporting(E_ALL ^ E_DEPRECATED);
         $to = Carbon::now();
@@ -143,7 +234,7 @@ class ReportService
         $response = [];
         $data = Muestra::whereBetween('created_at', [$from, $to])
             ->whereProductorId($productor->productor_id)
-            ->whereIn('nota_id', [1,2,3, 4])
+            ->whereIn('nota_id', [1, 2, 3, 4])
             ->orderBy('nota_id', 'DESC')
             ->get();
         //Log::info("adsdas");
@@ -153,10 +244,10 @@ class ReportService
             foreach ($data as $item) {
                 $imagenesMuestra = MuestraImagen::whereMuestraId($item->muestra_id)->get();
                 if ($imagenesMuestra != null) {
-                    foreach ($imagenesMuestra as $img ){
+                    foreach ($imagenesMuestra as $img) {
                         $imagesShow = false;
                         $images [] = [
-                            'path' => base_path().'/public/'.$img->muestra_imagen_ruta_corta,
+                            'path' => base_path() . '/public/' . $img->muestra_imagen_ruta_corta,
                             'url' => $img->muestra_imagen_ruta,
                             'description' => $img->muestra_imagen_texto,
                             'pallet' => $item->lote_codigo
@@ -186,6 +277,8 @@ class ReportService
                 $response [] = [
                     'calificacion' => (Nota::find($item->nota_id))->nota_nombre,
                     'pallet' => $item->lote_codigo,
+                    'calificacion_pallet' => 'X',
+                    'qr' => $item->muestra_qr,
                     'variedad' => (Variedad::find($item->variedad_id))->variedad_nombre ?? "",
                     'defecto' => $def,
                     'porcentaje' => $defectos->muestra_defecto_calculo ?? "",
@@ -207,13 +300,23 @@ class ReportService
         $cantidad['X']['pallets'] = 0;
         $cantidad['X']['muestras'] = 0;
         $cantidadShow = false;
-        foreach ($response as $item) {
+        foreach ($muestras['muestras'] as $key => $item) {
+
+
             $cantidadShow = true;
-            $cantidad[$item['calificacion']]['pallets']++;
-            $cantidad[$item['calificacion']]['muestras'] += $item['num_muestras'];
-            $cantidad[$item['calificacion']]['label'] = $item['calificacion'];
+            //dd($item);
+            $numMuestrasPallet = 0;
+            foreach ($item as $key2 => $item2){
+                if($key2 != 'nota_final'){
+                    $numMuestrasPallet++;
+                }
+            }
+            $cantidad[$item['nota_final']]['pallets']++;
+            $cantidad[$item['nota_final']]['muestras'] = $numMuestrasPallet;
+            $cantidad[$item['nota_final']]['label'] = $item['nota_final'];
         }
 
+        //dd($cantidad);
         //Log::info(json_encode($cantidad));
 
 
@@ -226,7 +329,7 @@ class ReportService
         //$pdf->save(public_path() . '/reportes/' . $nombre_reporte . '.pdf')->stream('reporte_test');
 
         try {
-            $view = \View::make('pdf.reporte', compact('fecha', 'productor', 'response', 'cantidad', 'cantidadShow','images','imagesShow'))->render();
+            $view = \View::make('pdf.reporte', compact('fecha', 'productor', 'response', 'cantidad', 'cantidadShow', 'images', 'imagesShow'))->render();
             $pdf = \App::make('dompdf.wrapper');
             $pdf->loadHTML($view);
             $pdf->save(public_path() . '/reportes/' . $nombre_reporte . '.pdf')->stream('reporte_test');
@@ -250,20 +353,20 @@ class ReportService
         $points[5] = 0;
 
         foreach ($input as $item) {
-            if ($item['nota']['id'] == 1) {
+            if ($item['nota_final'] == 'A') {
                 $points[1]++;
                 $points[1]++;
             }
-            if ($item['nota']['id'] == 2) {
+            if ($item['nota_final'] == 'B') {
                 $points[2]++;
             }
-            if ($item['nota']['id'] == 3) {
+            if ($item['nota_final'] == 'C') {
                 $points[3]++;
             }
-            if ($item['nota']['id'] == 4) {
+            if ($item['nota_final'] == 'O') {
                 $points[4]++;
             }
-            if ($item['nota']['id'] == 5) {
+            if ($item['nota_final'] == 'X') {
                 $points[5]++;
             }
         }

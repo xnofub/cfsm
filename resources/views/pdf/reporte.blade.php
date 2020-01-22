@@ -39,7 +39,6 @@
             <tr>
                 <td>Nota</td>
                 <td>Cantidad de Pallet</td>
-                <td>Numero de Muestras</td>
             </tr>
             </thead>
             <tbody>
@@ -47,7 +46,6 @@
                 <tr>
                     <td>{{$item}}</td>
                     <td>{{$value['pallets']}}</td>
-                    <td>{{$value['muestras']}}</td>
                 </tr>
             @endforeach
             </tbody>
@@ -62,24 +60,28 @@
         <table border="1">
             <thead>
             <tr>
-                <td>Nota</td>
+
                 <td>Num. de Pallet</td>
+                <td>Codigo Muestra(QR)</td>
+                <td>Nota Muestra</td>
                 <td>Variedad</td>
                 <td>Defecto</td>
                 <td>Porcentaje</td>
-                <td>Num. de Muestras</td>
+                <!--<td>Num. de Muestras</td>-->
             </tr>
             </thead>
             <tbody>
             @foreach($response as $item)
                 @if($item['calificacion'] == 'C' || $item['calificacion'] == 'O')
                     <tr>
-                        <td>{{$item['calificacion']}}</td>
+
                         <td>{{$item['pallet']}}</td>
+                        <td>{{$item['qr']}}</td>
+                        <td>{{$item['calificacion']}}</td>
                         <td>{{$item['variedad']}}</td>
                         <td>{{$item['defecto']}}</td>
                         <td>{{$item['porcentaje']}}</td>
-                        <td>{{$item['num_muestras']}}</td>
+                       <!-- <td>{{$item['num_muestras']}}</td>-->
                     </tr>
                 @endif
             @endforeach

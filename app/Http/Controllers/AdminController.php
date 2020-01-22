@@ -8,6 +8,7 @@ use App\MuestraDefecto;
 use App\Nota;
 use App\Productor;
 use App\Region;
+use App\Services\ReportService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,6 +18,8 @@ class AdminController extends Controller
     //
     public function index()
     {
+        $service = new ReportService();
+        $var = $service->get();
         //TODO: filtrar por fechas?
         $notas = Nota::all();
         $result = array();
