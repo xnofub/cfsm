@@ -80,8 +80,8 @@ class ReportService
                 //Log::info($datos_correo);
 
 
-                //Mail::to($mailingTo)
-                //    ->send(new SendMailable($datos_correo, $nombre_archivo));
+                Mail::to($mailingTo)
+                    ->send(new SendMailable($datos_correo, $nombre_archivo));
                 //dd("envio uno");
 
             }
