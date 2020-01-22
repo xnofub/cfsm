@@ -18,8 +18,8 @@ class AdminController extends Controller
     //
     public function index()
     {
-        $service = new ReportService();
-        $var = $service->get();
+        //$service = new ReportService();
+        //$var = $service->get();
         //TODO: filtrar por fechas?
         $notas = Nota::all();
         $result = array();
