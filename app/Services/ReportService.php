@@ -29,20 +29,26 @@ class ReportService
         $nombre_fecha = $to->toDateString();
 
         $from = Carbon::now('-24:00');
-        //$from = '2020-01-16 21:03:00';
-        //$to = '2020-01-16 22:10:00';
+        $yesterday = Carbon::yesterday();
+        //$from = '2020-01-28 04:00:01';
+        //$to = '2020-01-28 16:59:59';
 
         $productors = $this->getProductores();
-        //return $this->generateReport();
 
         $muestras = [];
         $muestrasAll = [];
 
         foreach ($productors as $productor) {
             $productor_nombre = str_replace(" ", "_", ($productor->productor_nombre));
+            //if($productor->productor_id != 13){
+            //    continue;
+            //}
 
             $data = Muestra::whereBetween('created_at', [$from, $to])->whereProductorId($productor->productor_id)->get();
-            if (count($data) > 0) {
+            //$data = Muestra::whereMuestraFecha()->whereProductorId($productor->productor_id)->get();
+            //dd(count($data));
+
+            if (count($data) > 4) {
                 $muestras = [
                     'productor' => [
                         'id' => $productor->productor_id,
@@ -51,10 +57,8 @@ class ReportService
                     'muestras' => $this->getData($productor, $data)
                 ];
                 $muestrasAll [] = $muestras;
-                //$productor_nombre = str_replace(" ", "_", ($productor->productor_nombre));
                 $nombre_archivo = $nombre_fecha . "_" . $productor->productor_id;
-                //Log::info($nombre_archivo);
-                //dd($muestras);
+
 
                 $flag = $this->generateReport($nombre_archivo, $nombre_fecha, $productor, $muestras);
 
@@ -208,7 +212,7 @@ class ReportService
                 return $nota;
             }
         }
-        return 'X';
+        return 'C';
         return $pallet;
 
     }
@@ -226,8 +230,8 @@ class ReportService
         $from = Carbon::now('-24:00');
         $productors = Productor::all();
 
-        //$from = '2020-01-16 21:03:00';
-        //$to = '2020-01-16 22:10:00';
+        //$from = '2020-01-28 04:00:01';
+        //$to = '2020-01-28 16:59:59';
         $images = [];
 
 
@@ -306,8 +310,8 @@ class ReportService
             $cantidadShow = true;
             //dd($item);
             $numMuestrasPallet = 0;
-            foreach ($item as $key2 => $item2){
-                if($key2 != 'nota_final'){
+            foreach ($item as $key2 => $item2) {
+                if ($key2 != 'nota_final') {
                     $numMuestrasPallet++;
                 }
             }
@@ -327,6 +331,7 @@ class ReportService
         //$pdf = \App::make('dompdf.wrapper');
         //$pdf->loadHTML($view);
         //$pdf->save(public_path() . '/reportes/' . $nombre_reporte . '.pdf')->stream('reporte_test');
+        //$fecha = "2020-01-28";
 
         try {
             $view = \View::make('pdf.reporte', compact('fecha', 'productor', 'response', 'cantidad', 'cantidadShow', 'images', 'imagesShow'))->render();
