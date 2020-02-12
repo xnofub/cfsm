@@ -48,7 +48,7 @@ class ReportService
             //$data = Muestra::whereMuestraFecha()->whereProductorId($productor->productor_id)->get();
             //dd(count($data));
 
-            if (count($data) > 4) {
+            if (count($data) >= 4) {
                 $muestras = [
                     'productor' => [
                         'id' => $productor->productor_id,
@@ -84,8 +84,15 @@ class ReportService
                 //Log::info($datos_correo);
 
 
-                Mail::to($mailingTo)
-                    ->send(new SendMailable($datos_correo, $nombre_archivo));
+                try {
+                    Mail::to($mailingTo)
+                        ->send(new SendMailable($datos_correo, $nombre_archivo));
+
+                    Log::info("Correo enviado al productor: ".$productor->productor_nombre);
+                }catch (\Exception $e){
+                    Log::error("no enviado al productor: ".$productor->productor_nombre);
+                }
+
                 //dd("envio uno");
 
             }
