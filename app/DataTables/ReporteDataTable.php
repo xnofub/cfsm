@@ -3,6 +3,8 @@
 namespace App\DataTables;
 
 use App\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Services\DataTable;
 use App\Muestra;
 use Carbon\Carbon;
@@ -19,46 +21,46 @@ class ReporteDataTable extends DataTable
     public function dataTable($query)
     {
         return datatables($query)
-            ->editColumn('region', function($query) {
+            ->editColumn('region', function ($query) {
                 return $query->region->region_nombre;
             })
-            ->editColumn('productor', function($query) {
+            ->editColumn('productor', function ($query) {
                 return $query->productor->productor_nombre;
             })
-            ->editColumn('especie', function($query) {
+            ->editColumn('especie', function ($query) {
                 return $query->especie->especie_nombre;
             })
-            ->editColumn('variedad', function($query) {
+            ->editColumn('variedad', function ($query) {
                 return $query->variedad->variedad_nombre;
             })
-            ->editColumn('calibre', function($query) {
+            ->editColumn('calibre', function ($query) {
                 return $query->calibre->calibre_nombre;
             })
-            ->editColumn('embalaje', function($query) {
+            ->editColumn('embalaje', function ($query) {
                 return $query->embalaje->embalaje_nombre;
             })
-            ->editColumn('etiqueta', function($query) {
+            ->editColumn('etiqueta', function ($query) {
                 return $query->etiqueta->etiqueta_nombre;
             })
-            ->editColumn('nota', function($query) {
+            ->editColumn('nota', function ($query) {
                 return $query->nota->nota_nombre;
             })
-            ->editColumn('estado', function($query) {
+            ->editColumn('estado', function ($query) {
                 return $query->estado_muestra->estado_muestra_nombre;
             })
             ->addColumn('action', function ($query) {
                 return '
-                <a href="'.route('muestras.edit',$query->muestra_id).'" class="btn btn-sm mb-1 btn-warning"><i class="glyphicon glyphicon-edit"></i> Editar </a>
+                <a href="' . route('muestras.edit', $query->muestra_id) . '" class="btn btn-sm mb-1 btn-warning"><i class="glyphicon glyphicon-edit"></i> Editar </a>
                 <br>
-                <a href="'.route('muestras.show',$query->muestra_id).'" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-edit"></i> Detalle </a>
+                <a href="' . route('muestras.show', $query->muestra_id) . '" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-edit"></i> Detalle </a>
                 ';
             })
             ->addColumn('responsive', function ($query) {
 
             });
-            /*->editColumn('lote_codigo', function($query) {
-                return $query->lote->lote_codigo;
-            });*/
+        /*->editColumn('lote_codigo', function($query) {
+            return $query->lote->lote_codigo;
+        });*/
     }
 
     /**
@@ -69,10 +71,18 @@ class ReporteDataTable extends DataTable
      */
     public function query(Muestra $model)
     {
+
         set_time_limit(0);
         //CONTRUCCION DE BUSQUEDA SQL SEGUN PARAMETROS ENVIADOS POR POST
-        $query = $model->with('region','productor','especie','variedad','calibre','embalaje','etiqueta','nota','estado_muestra')
-        ->orderBy('muestra_id', 'DESC');;
+        $query = $model->with('region', 'productor', 'especie', 'variedad', 'calibre', 'embalaje', 'etiqueta', 'nota', 'estado_muestra')
+            ->orderBy('muestra_id', 'DESC');;
+        if (Auth::check()) {
+            $user = Auth::user();
+            if ($user->perfil_id == 2) {
+                $query = $model->whereUserId($user->id)->with('region', 'productor', 'especie', 'variedad', 'calibre', 'embalaje', 'etiqueta', 'nota', 'estado_muestra')
+                    ->orderBy('muestra_id', 'DESC');
+            }
+        }
 
         //Fecha en que fue entregado el producto
         if ($this->request()->get('desde') && !$this->request()->get('hasta')) {
@@ -118,9 +128,9 @@ class ReporteDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-                    ->columns($this->getColumns())
-                    ->minifiedAjax()
-                    ->parameters($this->getBuilderParameters());
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            ->parameters($this->getBuilderParameters());
     }
 
     /**
@@ -131,23 +141,23 @@ class ReporteDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'responsive'        => ['title' => '', 'searchable' => false, 'orderable' => false, 'exportable' => false],
-            'action'            => ['name'  => 'action', 'title' => 'Opciones', 'exportable' => false],
-            'muestra_id'        => ['name'  => 'muestra_id', 'title' => 'ID'],
-            'muestra_fecha'     => ['name'  => 'muestra_fecha', 'title' => 'Fecha'],
-            'muestra_qr'        => ['name'  => 'muestra_qr', 'title' => 'QR'],
-            'muestra_brix'        => ['name'  => 'muestra_brix', 'title' => 'BRIX'],
-            'region'            => ['name'  => 'region.region_nombre', 'title' => 'Región'],
-            'productor'         => ['name'  => 'productor.productor_nombre', 'title' => 'Productor'],
-            'especie'           => ['name'  => 'especie.especie_nombre', 'title' => 'Especie'],
-            'variedad'          => ['name'  => 'variedad.variedad_nombre', 'title' => 'Variedad'],
-            'calibre'           => ['name'  => 'calibre.calibre_nombre', 'title' => 'Calibre'],
-            'embalaje'          => ['name'  => 'embalaje.embalaje_nombre', 'title' => 'Embalaje'],
-            'etiqueta'          => ['name'  => 'etiqueta.etiqueta_nombre', 'title' => 'Etiqueta'],
-            'nota'              => ['name'  => 'nota.nota_nombre', 'title' => 'Nota'],
-            'estado'            => ['name'  => 'estado_muestra.estado_muestra_nombre', 'title' => 'Estado'],
-            'muestra_cajas'     => ['name'  => 'muestra_cajas', 'title' => 'Cajas'],
-            'lote_codigo'       => ['name'  => 'lote_codigo', 'title' => 'Código Pallet'],
+            'responsive' => ['title' => '', 'searchable' => false, 'orderable' => false, 'exportable' => false],
+            'action' => ['name' => 'action', 'title' => 'Opciones', 'exportable' => false],
+            'muestra_id' => ['name' => 'muestra_id', 'title' => 'ID'],
+            'muestra_fecha' => ['name' => 'muestra_fecha', 'title' => 'Fecha'],
+            'muestra_qr' => ['name' => 'muestra_qr', 'title' => 'QR'],
+            'muestra_brix' => ['name' => 'muestra_brix', 'title' => 'BRIX'],
+            'region' => ['name' => 'region.region_nombre', 'title' => 'Región'],
+            'productor' => ['name' => 'productor.productor_nombre', 'title' => 'Productor'],
+            'especie' => ['name' => 'especie.especie_nombre', 'title' => 'Especie'],
+            'variedad' => ['name' => 'variedad.variedad_nombre', 'title' => 'Variedad'],
+            'calibre' => ['name' => 'calibre.calibre_nombre', 'title' => 'Calibre'],
+            'embalaje' => ['name' => 'embalaje.embalaje_nombre', 'title' => 'Embalaje'],
+            'etiqueta' => ['name' => 'etiqueta.etiqueta_nombre', 'title' => 'Etiqueta'],
+            'nota' => ['name' => 'nota.nota_nombre', 'title' => 'Nota'],
+            'estado' => ['name' => 'estado_muestra.estado_muestra_nombre', 'title' => 'Estado'],
+            'muestra_cajas' => ['name' => 'muestra_cajas', 'title' => 'Cajas'],
+            'lote_codigo' => ['name' => 'lote_codigo', 'title' => 'Código Pallet'],
         ];
     }
     // 474=8751 y 475=8729
@@ -165,7 +175,7 @@ class ReporteDataTable extends DataTable
     protected function getBuilderParameters()
     {
         return [
-            'dom'     => "<'row'<'col-sm-6'l><'col-sm-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-4'i><'col-sm-4 text-center'B><'col-sm-4'p>>",
+            'dom' => "<'row'<'col-sm-6'l><'col-sm-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-4'i><'col-sm-4 text-center'B><'col-sm-4'p>>",
             'buttons' => [
                 'excel',
                 'csv',
