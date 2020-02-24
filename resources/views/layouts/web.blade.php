@@ -167,7 +167,7 @@
                 <span>Grafico Acumulado (Muestras)</span></a>
             </li>
         @endif
-        @if( in_array(Auth::user()->perfil->perfil_nombre, ['Admin','Cliente']) )
+        @if( in_array(Auth::user()->perfil->perfil_nombre, ['Admin','Cliente','Moderador']) )
           <li class="nav-item">
             <a class="nav-link" href="{{ url('reporte') }}">
               <i class="fas fa-fw fa-table"></i>
