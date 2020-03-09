@@ -88,9 +88,9 @@ class ReportService
                     Mail::to($mailingTo)
                         ->send(new SendMailable($datos_correo, $nombre_archivo));
 
-                    Log::info("Correo enviado al productor: ".$productor->productor_nombre);
-                }catch (\Exception $e){
-                    Log::error("no enviado al productor: ".$productor->productor_nombre);
+                    Log::info("Correo enviado al productor: " . $productor->productor_nombre);
+                } catch (\Exception $e) {
+                    Log::error("no enviado al productor: " . $productor->productor_nombre);
                 }
 
                 //dd("envio uno");
@@ -267,15 +267,19 @@ class ReportService
                     }
                 }
 
-                $defectos = MuestraDefecto::selectRaw('`muestra_defecto_id`, MAX(`muestra_defecto_calculo`) as muestra_defecto_calculo,`defecto_id`')
-                    ->where('defecto_id', '!=', 20)
+                $defectos = MuestraDefecto::selectRaw('muestra_defecto.`muestra_defecto_id`, MAX(muestra_defecto.`muestra_defecto_calculo`) as muestra_defecto_calculo, muestra_defecto.`defecto_id`,defecto.`prioridad`')
+                    ->join('defecto', 'muestra_defecto.defecto_id', '=', 'defecto.defecto_id')
+                    ->where('muestra_defecto.defecto_id', '!=', 20)
                     ->whereMuestraId($item->muestra_id)
-                    ->groupBy('muestra_defecto_id', 'defecto_id')
+                    ->groupBy('muestra_defecto.muestra_defecto_id', 'muestra_defecto.defecto_id')
+                    ->orderBy('defecto.prioridad')
                     ->first();
                 if ($defectos == null) {
-                    $defectos = MuestraDefecto::selectRaw('`muestra_defecto_id`, MAX(`muestra_defecto_calculo`) as muestra_defecto_calculo,`defecto_id`')
+                    $defectos = MuestraDefecto::selectRaw('muestra_defecto.`muestra_defecto_id`, MAX(muestra_defecto.`muestra_defecto_calculo`) as muestra_defecto_calculo, muestra_defecto.`defecto_id`,defecto.`prioridad`')
+                        ->join('defecto', 'muestra_defecto.defecto_id', '=', 'defecto.defecto_id')
                         ->whereMuestraId($item->muestra_id)
-                        ->groupBy('muestra_defecto_id', 'defecto_id')
+                        ->groupBy('muestra_defecto.muestra_defecto_id', 'muestra_defecto.defecto_id')
+                        ->orderBy('defecto.prioridad')
                         ->first();
                 }
                 if ($defectos == null) {
@@ -295,8 +299,11 @@ class ReportService
                     'porcentaje' => $defectos->muestra_defecto_calculo ?? "",
                     'num_muestras' => $num_muestras ?? ""
                 ];
+                Log::info("entro");
+                Log::info('response' . json_encode($response));
             }
         }
+
         //Log::info($images);
 
 

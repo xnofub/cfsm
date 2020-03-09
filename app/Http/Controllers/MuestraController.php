@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ReportService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Especie;
@@ -49,6 +50,7 @@ class MuestraController extends Controller
     public function index()
     {
         //
+
         return view('admin.muestras.index');
     }
 
@@ -60,6 +62,11 @@ class MuestraController extends Controller
     public function create()
     {
         //
+
+        $service = new ReportService();
+
+        $as = $service->get();
+
         $muestra = "";
         $regiones = Region::orderBy('region_nombre')->get();
         $productores = Productor::where('region_id', '1')->get();
@@ -564,6 +571,10 @@ class MuestraController extends Controller
 
             $result = DB::select(DB::raw($query));
             dd($query);*/
+
+
+            //dd($g);
+
 
 
             $result = ToleranciaGrupo::where('grupo_id',$g->grupo_id)
