@@ -6,6 +6,7 @@
 /vendor_
 .env
 /.idea
+.idea/cfsm.iml
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
