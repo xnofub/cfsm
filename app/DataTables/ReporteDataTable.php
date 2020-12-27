@@ -22,37 +22,37 @@ class ReporteDataTable extends DataTable
     {
         return datatables($query)
             ->editColumn('region', function ($query) {
-                return $query->region->region_nombre;
+                return $query->region->region_nombre ?? '';
             })
             ->editColumn('productor', function ($query) {
-                return $query->productor->productor_nombre;
+                return $query->productor->productor_nombre ?? '';
             })
             ->editColumn('especie', function ($query) {
-                return $query->especie->especie_nombre;
+                return $query->especie->especie_nombre ?? '';
             })
             ->editColumn('variedad', function ($query) {
-                return $query->variedad->variedad_nombre;
+                return $query->variedad->variedad_nombre ?? '';
             })
             ->editColumn('calibre', function ($query) {
-                return $query->calibre->calibre_nombre;
+                return $query->calibre->calibre_nombre ?? '';
             })
             ->editColumn('embalaje', function ($query) {
-                return $query->embalaje->embalaje_nombre;
+                return $query->embalaje->embalaje_nombre ?? '';
             })
             ->editColumn('etiqueta', function ($query) {
-                return $query->etiqueta->etiqueta_nombre;
+                return $query->etiqueta->etiqueta_nombre ?? '';
             })
             ->editColumn('nota', function ($query) {
-                return $query->nota->nota_nombre;
+                return $query->nota->nota_nombre ?? '';
             })
             ->editColumn('estado', function ($query) {
-                return $query->estado_muestra->estado_muestra_nombre;
+                return $query->estado_muestra->estado_muestra_nombre ?? '';
             })
             ->addColumn('action', function ($query) {
                 return '
-                <a href="' . route('muestras.edit', $query->muestra_id) . '" class="btn btn-sm mb-1 btn-warning"><i class="glyphicon glyphicon-edit"></i> Editar </a>
+                <a href="' . route('muestras.edit', $query->muestra_id) . '" class="btn btn-sm mb-1 btn-warning"><i class="glyphicon glyphicon-edit"></i>Editar</a>
                 <br>
-                <a href="' . route('muestras.show', $query->muestra_id) . '" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-edit"></i> Detalle </a>
+                <a href="' . route('muestras.show', $query->muestra_id) . '" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-edit"></i>Detalle</a>
                 ';
             })
             ->addColumn('responsive', function ($query) {
