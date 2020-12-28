@@ -16,7 +16,7 @@ class MuestraDefecto extends Model
         'nota_id',
         'user_id',
     ];
-    public $timestamps = false;
+    public $timestamps = true;
 
     #hasMany's
 
