@@ -63,19 +63,19 @@ class MobileService
                     'muestra_racimos' => $m['num_racimos'],
                     'muestra_brix' => $m['brix']
                 ];
-                $created = Muestra::create($muestraInput);
-                Log::info($created->muestra_id);
+                //$created = Muestra::create($muestraInput);
+                //Log::info($created->muestra_id);
                 for ($i = 1; $i <= 20; $i++) {
                     if((Defecto::whereDefectoNombre($m['defecto_'.$i])->first()) == null){
                         continue;
                     }
-                    $input['muestra_id'] = $created->muestra_id;
+                    //$input['muestra_id'] = $created->muestra_id;
                     $input['defecto_id'] = (Defecto::whereDefectoNombre($m['defecto_'.$i])->first())->defecto_id;
                     $input['muestra_defecto_valor'] = $m['valor_'.$i];
                     $input['nota_id'] = 5;
                     $input['muestra_defecto_calculo'] = $m['suma_'.$i];
-                    $muestraDefecto = MuestraDefecto::create($input);
-                    Log::info($muestraDefecto->muestra_defecto_id);
+                    //$muestraDefecto = MuestraDefecto::create($input);
+                    //Log::info($muestraDefecto->muestra_defecto_id);
                 }
 
             } catch (\Exception $e) {
