@@ -17,8 +17,11 @@ use App\Nota;
 use App\Productor;
 use App\Region;
 use App\ToleranciaGrupo;
+use App\User;
 use App\Variedad;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
 class MobileService
@@ -52,29 +55,28 @@ class MobileService
                     'categoria_id' => (Categoria::whereCategoriaNombre($m['categoria'])->first())->categoria_id,
                     'embalaje_id' => (Embalaje::whereEmbalajeNombre($m['embalaje'])->first())->embalaje_id,
                     'etiqueta_id' => (Etiqueta::whereEtiquetaNombre($m['etiqueta'])->first())->etiqueta_id,
-                    //'nota_id' => (Nota::whereNotaNombre($m['embalaje'])->first())->embalaje_id,
-                    'nota_id' => 1,
+                    'nota_id' => (Nota::whereNotaNombre($m['nota'])->first())->nota_id,
                     'lote_codigo' => $m['pallet'],
                     'muestra_peso' => $m['peso'],
                     'estado_muestra_id' => 3,
                     'apariencia_id' => (Apariencia::whereAparienciaNombre($m['apariencia'])->first())->apariencia_id,
-                    'user_id' => 34,
+                    'user_id' => $m['user_id'],
                     'muestra_bolsas' => $m['num_bolsas'],
                     'muestra_racimos' => $m['num_racimos'],
                     'muestra_brix' => $m['brix']
                 ];
-                //$created = Muestra::create($muestraInput);
+                $created = Muestra::create($muestraInput);
                 //Log::info($created->muestra_id);
                 for ($i = 1; $i <= 20; $i++) {
-                    if((Defecto::whereDefectoNombre($m['defecto_'.$i])->first()) == null){
+                    if ((Defecto::whereDefectoNombre($m['defecto_' . $i])->first()) == null) {
                         continue;
                     }
-                    //$input['muestra_id'] = $created->muestra_id;
-                    $input['defecto_id'] = (Defecto::whereDefectoNombre($m['defecto_'.$i])->first())->defecto_id;
-                    $input['muestra_defecto_valor'] = $m['valor_'.$i];
-                    $input['nota_id'] = 5;
-                    $input['muestra_defecto_calculo'] = $m['suma_'.$i];
-                    //$muestraDefecto = MuestraDefecto::create($input);
+                    $input['muestra_id'] = $created->muestra_id;
+                    $input['defecto_id'] = (Defecto::whereDefectoNombre($m['defecto_' . $i])->first())->defecto_id;
+                    $input['muestra_defecto_valor'] = $m['valor_' . $i];
+                    $input['nota_id'] = (Nota::first())->id;
+                    $input['muestra_defecto_calculo'] = $m['suma_' . $i];
+                    $muestraDefecto = MuestraDefecto::create($input);
                     //Log::info($muestraDefecto->muestra_defecto_id);
                 }
 
@@ -92,7 +94,22 @@ class MobileService
 
 
         return $data;
+    }
 
+    public function login(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+            return [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email
+            ];
+        }
+
+        return '';
     }
 
 }

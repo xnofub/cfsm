@@ -19,3 +19,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::post('app-sync', 'API\MobileApiController@sync');
+Route::post('login', 'API\MobileApiController@login');
