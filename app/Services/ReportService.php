@@ -89,11 +89,13 @@ class ReportService
 
 
                 try {
+                    print("enviando al productor: " . $productor->productor_nombre);
                     Mail::to($mailingTo)
                         ->send(new SendMailable($datos_correo, $nombre_archivo));
-
+                    print("Enviado al productor: " . $productor->productor_nombre);
                     Log::info("Correo enviado al productor: " . $productor->productor_nombre);
                 } catch (\Exception $e) {
+                    print("no enviado al productor: " . $productor->productor_nombre);
                     Log::error("no enviado al productor: " . $productor->productor_nombre);
                 }
 
