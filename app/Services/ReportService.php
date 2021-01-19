@@ -46,7 +46,11 @@ class ReportService
 
             $data = Muestra::whereBetween('created_at', [$from, $to])->whereProductorId($productor->productor_id)->get();
             //$data = Muestra::whereMuestraFecha()->whereProductorId($productor->productor_id)->get();
+            //dd($from);
+            //dd($to);
             //dd(count($data));
+            print("productor ".$productor->productor_id." cantidad ".count($data)."\n");
+
 
             if (count($data) >= 4) {
                 $muestras = [
