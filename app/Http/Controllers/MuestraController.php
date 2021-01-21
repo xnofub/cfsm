@@ -379,7 +379,7 @@ class MuestraController extends Controller
     {
         $muestra = Muestra::find($request->muestra_id);
         $rules = [
-            'muestra_peso' => 'required|numeric',
+            'muestra_peso' => 'required|numeric|min:7500|max:10500',
             'muestra_qr' => 'required|max:255',
             'region_id' => 'required',
             'productor_id' => 'required',
@@ -390,14 +390,18 @@ class MuestraController extends Controller
             'embalaje_id' => 'required',
             'etiqueta_id' => 'required',
             'apariencia_id' => 'required',
-            'muestra_bolsas' => 'required|numeric',
-            'muestra_racimos' => 'required|numeric',
-            'muestra_brix' => 'required|numeric',
+            'muestra_bolsas' => 'required|numeric|min:6|max:12',
+            'muestra_racimos' => 'required|numeric|min:1|max:30',
+            'muestra_brix' => 'required|numeric|min:10|max:28',
+            'muestra_desgrane' => 'required|numeric|min:0|max:1000',
+
         ];
 
         $messages = [
             'muestra_peso.required' => 'El Peso obligatorio.',
             'muestra_peso.numeric' => 'Peso debe ser número.',
+            'muestra_peso.min' => 'Peso minimo fuera de rango 7500 - 10500 (número).',
+            'muestra_peso.max' => 'Peso máximo fuera de rango 7500 - 10500 (número).',
             'muestra_qr.required' => 'El Código QR es obligatorio.',
             'muestra_qr.max' => 'El nombre del productor ingresado es demaciado largo.',
             'region_id.required' => 'Región es obligatorio.',
@@ -409,14 +413,29 @@ class MuestraController extends Controller
             'embalaje_id.required' => 'Embalaje es obligatorio.',
             'etiqueta_id.required' => 'Etiqueta es obligatorio.',
             'apariencia_id.required' => 'Apariencia es obligatorio.',
+
             'muestra_bolsas.required' => 'Bolsas es obligatorio.',
             'muestra_bolsas.numeric' => 'Bolsas debe ser número..',
+            'muestra_bolsas.min' => 'Número de bolsas fuera de rango 6 - 12 (número).',
+            'muestra_bolsas.max' => 'Número de bolsas fuera de rango 6 - 12 (número).',
+
             'muestra_racimos.required' => 'Racimos es obligatorio.',
             'muestra_racimos.numeric' => 'Bolsas debe ser número.',
+            'muestra_racimos.min' => 'Número de racimos fuera de rango 1 - 30 (número).',
+            'muestra_racimos.max' => 'Número de racimos fuera de rango 1 - 30 (número).',
+
+
             'muestra_brix.required' => 'Brix  es obligatorio.',
             'muestra_brix.numeric' => 'Brix debe ser número.',
-        ];
+            'muestra_brix.min' => 'Brix fuera de rango 10 - 28 (número).',
+            'muestra_brix.max' => 'Brix fuera de rango 10 - 28 (número).',
 
+            'muestra_desgrane.required' => 'Desgrane  es obligatorio.',
+            'muestra_desgrane.numeric' => 'Desgrane debe ser número.',
+            'muestra_desgrane.min' => 'Desgrane fuera de rango 0 - 1000 (número).',
+            'muestra_desgrane.max' => 'Desgrane fuera de rango 0 - 1000 (número).',
+
+        ];
         $this->validate($request, $rules, $messages);
 
 
