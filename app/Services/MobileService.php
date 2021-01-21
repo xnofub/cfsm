@@ -53,7 +53,7 @@ class MobileService
                     'productor_id' => (Productor::whereProductorNombre($m['productor'])->first())->productor_id,
                     'especie_id' => 1,
                     'variedad_id' => (Variedad::whereVariedadNombre($m['variedad'])->first())->variedad_id,
-                    'calibre_id' => 11,
+                    'calibre_id' => (Calibre::whereCalibreNombre($m['calibre'])->first())->calibre_id,
                     'categoria_id' => (Categoria::whereCategoriaNombre($m['categoria'])->first())->categoria_id,
                     'embalaje_id' => (Embalaje::whereEmbalajeNombre($m['embalaje'])->first())->embalaje_id,
                     'etiqueta_id' => (Etiqueta::whereEtiquetaNombre($m['etiqueta'])->first())->etiqueta_id,
