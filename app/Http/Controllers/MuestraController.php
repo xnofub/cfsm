@@ -980,19 +980,11 @@ class MuestraController extends Controller
         $statement = 'SELECT m.muestra_id
         , m.muestra_qr
         , m.muestra_fecha
-<<<<<<< HEAD
         , m.muestra_peso        
         , m.muestra_racimos 
         , m.muestra_brix 
         , m.muestra_bolsas 
         , et.etiqueta_nombre 
-=======
-        , m.muestra_peso
-        , m.muestra_racimos
-        , m.muestra_brix
-        , m.muestra_bolsas
-        , et.etiqueta_nombre
->>>>>>> origin/develop
         , e.especie_nombre
         , v.variedad_nombre
         , cl.calibre_nombre
@@ -1002,11 +994,7 @@ class MuestraController extends Controller
         , a.apariencia_nombre
         , p.productor_nombre
         , em.embalaje_nombre
-<<<<<<< HEAD
-        , re.region_nombre 
-=======
         , re.region_nombre
->>>>>>> origin/develop
         , m.lote_codigo
                ,SUM(
                        IF(f.defecto_id=1
@@ -1421,7 +1409,6 @@ class MuestraController extends Controller
         WHERE  p.productor_id = ' . $productor_id . '
         GROUP BY  m.muestra_id
         , m.muestra_id
-<<<<<<< HEAD
         , m.`muestra_qr`
         , m.`muestra_brix`
         , m.`lote_codigo`
@@ -1436,21 +1423,6 @@ class MuestraController extends Controller
         , p.productor_nombre
         ';
         Log::info($statement);
-=======
-        , m.muestra_qr
-        , m.muestra_brix
-        , m.lote_codigo
-        , m.muestra_bolsas
-        , e.especie_nombre
-        , v.variedad_nombre
-        , cl.calibre_nombre
-        , ct.categoria_nombre
-        , m.nota_id
-        , n.nota_nombre
-        , a.apariencia_nombre
-        , p.productor_nombre';
-        //Log::info($statement);
->>>>>>> origin/develop
         $consolidado = DB::select(DB::raw($statement));
 
         $spreadsheet = new Spreadsheet();

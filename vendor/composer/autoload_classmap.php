@@ -21,10 +21,7 @@ return array(
     'App\\Etiqueta' => $baseDir . '/app/Etiqueta.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
     'App\\Grupo' => $baseDir . '/app/Grupo.php',
-<<<<<<< HEAD
-=======
     'App\\Http\\Controllers\\API\\MobileApiController' => $baseDir . '/app/Http/Controllers/API/MobileApiController.php',
->>>>>>> origin/develop
     'App\\Http\\Controllers\\AdminController' => $baseDir . '/app/Http/Controllers/AdminController.php',
     'App\\Http\\Controllers\\ApiController' => $baseDir . '/app/Http/Controllers/ApiController.php',
     'App\\Http\\Controllers\\Auth\\ForgotPasswordController' => $baseDir . '/app/Http/Controllers/Auth/ForgotPasswordController.php',
@@ -121,8 +118,6 @@ return array(
     'Collective\\Html\\HtmlServiceProvider' => $vendorDir . '/laravelcollective/html/src/HtmlServiceProvider.php',
     'Complex\\Complex' => $vendorDir . '/markbaker/complex/classes/src/Complex.php',
     'Complex\\Exception' => $vendorDir . '/markbaker/complex/classes/src/Exception.php',
-<<<<<<< HEAD
-=======
     'CpChart\\Barcode\\Barcode128' => $vendorDir . '/szymach/c-pchart/src/Barcode/Barcode128.php',
     'CpChart\\Barcode\\Barcode39' => $vendorDir . '/szymach/c-pchart/src/Barcode/Barcode39.php',
     'CpChart\\BaseDraw' => $vendorDir . '/szymach/c-pchart/src/BaseDraw.php',
@@ -139,7 +134,6 @@ return array(
     'CpChart\\Data' => $vendorDir . '/szymach/c-pchart/src/Data.php',
     'CpChart\\Draw' => $vendorDir . '/szymach/c-pchart/src/Draw.php',
     'CpChart\\Image' => $vendorDir . '/szymach/c-pchart/src/Image.php',
->>>>>>> origin/develop
     'Cpdf' => $vendorDir . '/dompdf/dompdf/lib/Cpdf.php',
     'Cron\\AbstractField' => $vendorDir . '/dragonmantank/cron-expression/src/Cron/AbstractField.php',
     'Cron\\CronExpression' => $vendorDir . '/dragonmantank/cron-expression/src/Cron/CronExpression.php',
