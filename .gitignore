@@ -4,6 +4,7 @@
 /storage/*.key
 /vendor
 /vendor_
+/public/image
 .env
 /.idea
 .idea/cfsm.iml
