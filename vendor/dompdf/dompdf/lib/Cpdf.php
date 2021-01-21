@@ -2542,7 +2542,8 @@ EOT;
                             $width = floatval($dtmp['WX']);
 
                             if ($c >= 0) {
-                                if ($c != hexdec($n)) {
+                                //if ($c != hexdec($n)) {
+                                if (ctype_xdigit($c) && ctype_xdigit($n)) {
                                     $data['codeToName'][$c] = $n;
                                 }
                                 $data['C'][$c] = $width;
@@ -2595,7 +2596,8 @@ EOT;
                                     $cidtogid[$c * 2 + 1] = chr($glyph & 0xFF);
                                 }
 
-                                if ($c != hexdec($n)) {
+                                //if ($c != hexdec($n)) {
+                                if (ctype_xdigit($c) && ctype_xdigit($n)) {
                                     $data['codeToName'][$c] = $n;
                                 }
                                 $data['C'][$c] = $width;
