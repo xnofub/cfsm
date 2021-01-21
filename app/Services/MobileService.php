@@ -5,6 +5,7 @@ namespace App\Services;
 
 
 use App\Apariencia;
+use App\Calibre;
 use App\Categoria;
 use App\Concepto;
 use App\Defecto;
@@ -39,6 +40,7 @@ class MobileService
         $data['defecto'] = Defecto::all();
         $data['tolerancias'] = ToleranciaGrupo::all();
         $data['concepto'] = Concepto::all();
+        $data['calibre'] = Calibre::all();
         $data['nota'] = Nota::all();
 
         $muestra = $request->data;
