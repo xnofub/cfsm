@@ -40,8 +40,8 @@ class MobileService
         $data['defecto'] = Defecto::all();
         $data['tolerancias'] = ToleranciaGrupo::all();
         $data['concepto'] = Concepto::all();
-        $data['calibre'] = Calibre::all();
         $data['nota'] = Nota::all();
+        $data['calibre'] = Calibre::all();
 
         $muestra = $request->data;
         foreach ($muestra as $m) {
