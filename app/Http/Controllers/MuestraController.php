@@ -663,6 +663,7 @@ class MuestraController extends Controller
 
     public function paso3(Request $request)
     {
+        $swerror = 0;
         $muestra = Muestra::find($request->muestra_id);
         $defecto_id = $request->defecto_id;
         $defecto = Defecto::find($defecto_id);
@@ -671,6 +672,9 @@ class MuestraController extends Controller
         if ($defecto->zona_id == 1) {
             #CALCULO POR %
             $calculado = round((($muestra_defecto_valor * 100) / $muestra->muestra_peso), 2);
+            if($calculado > 100 ){
+                $swerror = 1;
+            }
             $tolerancia = Tolerancia::where('defecto_id', $defecto_id)
                 ->where('tolerancia_desde', '<=', $calculado)
                 ->where('tolerancia_hasta', '>=', $calculado)
@@ -686,33 +690,43 @@ class MuestraController extends Controller
         } else {
             #CALCULO POR NUMERO
             $calculado = $muestra_defecto_valor;
+            if($calculado > 50 ){
+                $swerror = 1;
+            }
+
+
             $nota_id = 5;
             $nota = Nota::find($nota_id);
             $muestra_defecto_valor = $muestra_defecto_valor;
         }
         //return response()->json(1);
         #print_r($tolerancia->nota->nota_nombre);
+        if($swerror == 0 ){
+            try {
+                $user = null;
+                if (Auth::check()) {
+                    $user = Auth::user();
+                }
+                $muestra_defecto = New MuestraDefecto();
+                $muestra_defecto->muestra_id = $request->muestra_id;
+                $muestra_defecto->defecto_id = $request->defecto_id;
+                $muestra_defecto->muestra_defecto_valor = $request->muestra_defecto_valor;
+                $muestra_defecto->nota_id = $nota->nota_id;
+                if ($user) {
+                    $muestra_defecto->user_id = $user->id;
+                }
+                $muestra_defecto->muestra_defecto_calculo = $calculado;
+                $muestra_defecto->save();
+                echo 'REGISTRADO CON EXITO';
+            } catch (Exception $e) {
+                return $e->getMessage();
+            }
 
-        try {
-            $user = null;
-            if (Auth::check()) {
-                $user = Auth::user();
-            }
-            $muestra_defecto = New MuestraDefecto();
-            $muestra_defecto->muestra_id = $request->muestra_id;
-            $muestra_defecto->defecto_id = $request->defecto_id;
-            $muestra_defecto->muestra_defecto_valor = $request->muestra_defecto_valor;
-            $muestra_defecto->nota_id = $nota->nota_id;
-            if ($user) {
-                $muestra_defecto->user_id = $user->id;
-            }
-            $muestra_defecto->muestra_defecto_calculo = $calculado;
-            $muestra_defecto->save();
-            echo 'registrado con exito';
-        } catch (Exception $e) {
-            return $e->getMessage();
+        }else{
+            echo 'ERROR EN LOS DATOS INGRESADOS';
         }
-
+        
+        
     }
 
     public function getDefectosByGrupo(Request $request)
