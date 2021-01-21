@@ -393,8 +393,6 @@ class MuestraController extends Controller
             'muestra_bolsas' => 'required|numeric|min:6|max:12',
             'muestra_racimos' => 'required|numeric|min:1|max:30',
             'muestra_brix' => 'required|numeric|min:10|max:28',
-            'muestra_desgrane' => 'required|numeric|min:0|max:1000',
-
         ];
 
         $messages = [
@@ -430,10 +428,7 @@ class MuestraController extends Controller
             'muestra_brix.min' => 'Brix fuera de rango 10 - 28 (número).',
             'muestra_brix.max' => 'Brix fuera de rango 10 - 28 (número).',
 
-            'muestra_desgrane.required' => 'Desgrane  es obligatorio.',
-            'muestra_desgrane.numeric' => 'Desgrane debe ser número.',
-            'muestra_desgrane.min' => 'Desgrane fuera de rango 0 - 1000 (número).',
-            'muestra_desgrane.max' => 'Desgrane fuera de rango 0 - 1000 (número).',
+
 
         ];
         $this->validate($request, $rules, $messages);
