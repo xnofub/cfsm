@@ -104,7 +104,7 @@
                     <a href="{!!URL::to('/muestra-3/'.$muestra->muestra_id.'')!!}" class="btn btn btn-warning   btn-block"> <i class="far fa-caret-square-left"></i> Volver</a>
             </div>
             <div class="col">
-                    <a href="{!!URL::to('/reportes')!!}" class="btn btn btn-success   btn-block"> Finalizar <i class="far fa-save"></i> </a>
+                    <a href="{!!URL::to('/reporte')!!}" class="btn btn btn-success   btn-block"> Finalizar <i class="far fa-save"></i> </a>
             </div>
 
             <br>

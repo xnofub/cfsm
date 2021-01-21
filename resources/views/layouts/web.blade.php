@@ -141,9 +141,10 @@
             <a class="dropdown-item" href="{!!URL::to('/productores')!!}">Productor</a>
             <a class="dropdown-item" href="{!!URL::to('/variedades')!!}">Variedades</a>
             <a class="dropdown-item" href="{!!URL::to('/calibres')!!}">Calibre</a>
+            <a class="dropdown-item" href="{!!URL::to('/productorVariedades')!!}">Productor/Variedades</a>
             <a class="dropdown-item" href="{!!URL::to('/etiquetas')!!}">Etiqueta</a>
             <a class="dropdown-item" href="{!!URL::to('/embalajes')!!}">Embalaje</a>
-            <a class="dropdown-item" href="{!!URL::to('/tolerancias')!!}">Tolerancia</a>
+            <!--<a class="dropdown-item" href="{!!URL::to('/tolerancias')!!}">Tolerancia</a>-->
           </div>
         </li>
         @endif
@@ -166,9 +167,9 @@
                 <span>Grafico Acumulado (Muestras)</span></a>
             </li>
         @endif
-        @if( in_array(Auth::user()->perfil->perfil_nombre, ['Admin','Cliente']) )
+        @if( in_array(Auth::user()->perfil->perfil_nombre, ['Admin','Cliente','Moderador']) )
           <li class="nav-item">
-            <a class="nav-link" href="{{ url('reportes') }}">
+            <a class="nav-link" href="{{ url('reporte') }}">
               <i class="fas fa-fw fa-table"></i>
               <span>Reportes</span></a>
           </li>

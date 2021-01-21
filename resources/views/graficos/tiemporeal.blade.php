@@ -8,7 +8,7 @@
         <li class="breadcrumb-item active">Graficos por fecha (muestra)</li>
     </ol>
 
-    
+
     <div class="row">
         @foreach($productores  as $p)
         <div class="col-lg-4">
@@ -16,22 +16,22 @@
                 <div class="card-header">
                     <i class="fas fa-chart-pie"></i>
                     {{$p->productor_nombre}}
-                    
 
-                   
+
+
                 </div>
                 <div class="card-body">
                     <canvas id="chart{{$p->productor_id}}" width="100%" height="100"></canvas>
                 </div>
-                <div class="card-footer small text-muted">{{$fecha_seleccionada}}</div>
+                <div class="card-footer small text-muted">{{$fecha_seleccionada}}-{{$fecha_seleccionada_hasta}}</div>
                 </div>
         </div>
         @endforeach
 
         <a href="{!!URL::to('/graficos')!!}" class="btn btn btn-success   btn-block"> Finalizar <i class="far fa-save"></i> </a>
-        
+
     </div>
-   
+
 
 @endsection
 @section('js')
@@ -51,18 +51,18 @@
             data: [
             @foreach($p->notas  as $n)
                 {{$n->total}},
-            @endforeach    
+            @endforeach
 
             ],
             backgroundColor: [
                 @foreach($p->notas  as $n)
                 "{{$n->color}}",
-                @endforeach  
+                @endforeach
             ],
             hoverBackgroundColor: [
                 @foreach($p->notas  as $n)
                 "{{$n->color_bg}}",
-                @endforeach      
+                @endforeach
             ]
           }]
         },

@@ -8,12 +8,16 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.1.3",
+        "php": "^7.4.1",
+        "barryvdh/laravel-dompdf": "^0.8.4",
         "fideloper/proxy": "^4.0",
+        "nesbot/carbon": "2.3.0 as 1.25.0",
+        "ramsey/uuid" : "*",
         "laravel/framework": "5.7.*",
         "laravel/tinker": "^1.0",
         "laravelcollective/html": "^5.7",
         "phpoffice/phpspreadsheet": "^1.6",
+        "szymach/c-pchart": "^3.0",
         "yajra/laravel-datatables-buttons": "^4.5",
         "yajra/laravel-datatables-oracle": "^8.13",
         "nesbot/carbon": "^1.36.2"

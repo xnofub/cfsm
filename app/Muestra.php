@@ -30,9 +30,10 @@ class Muestra extends Model
         'lote_codigo',
         'estado_muestra_id',
         'apariencia_id',
+        'created_at'
 
     ];
-    public $timestamps = false;
+    public $timestamps = true;
 
     #hasMany's
     public function muestras_defectos () {

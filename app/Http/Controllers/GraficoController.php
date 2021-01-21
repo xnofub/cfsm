@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Productor;
 use Carbon\Carbon;
 use DB;
+
 class GraficoController extends Controller
 {
     /**
@@ -17,7 +18,9 @@ class GraficoController extends Controller
     {
         //
         $productores = Productor::orderBy('productor_nombre')->get();
-        return view('graficos.productores',compact('productores'));
+
+        //return view('pdf.reporte');
+        return view('graficos.productores', compact('productores'));
     }
 
     /**
@@ -33,7 +36,7 @@ class GraficoController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -44,7 +47,7 @@ class GraficoController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -55,7 +58,7 @@ class GraficoController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -66,8 +69,8 @@ class GraficoController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -78,7 +81,7 @@ class GraficoController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -86,7 +89,8 @@ class GraficoController extends Controller
         //
     }
 
-    public function vergraficos(Request $request){
+    public function vergraficos(Request $request)
+    {
 
         $rules = [
             'productor' => 'required',
@@ -102,14 +106,18 @@ class GraficoController extends Controller
 
         $productores_array = $request->productor;
         $fecha_seleccionada = $request->fecha;
+        $fecha_seleccionada_hasta = $request->fecha_hasta;
+
         $fecha = Carbon::parse($request->fecha)->toDateTimeString();
-       
+        $fecha_hasta = Carbon::parse($request->fecha_hasta)->toDateTimeString();
+
+
         $arrayProductores = array();
 
 
         foreach ($productores_array as $p) {
             //echo $p;
-            $statement ="SELECT COUNT(*) as total
+            $statement = "SELECT COUNT(*) as total
             , n.`nota_id`
             , n.`nota_nombre`
             , n.`color`
@@ -119,20 +127,22 @@ WHERE productor_id = $p and CAST(muestra_fecha as  DATE) = CAST('$fecha' as  DAT
             FROM muestra m
             LEFT JOIN nota n ON n.`nota_id` = m.`nota_id`
             WHERE m.productor_id = $p
-            and CAST(m.muestra_fecha as  DATE) = CAST('$fecha' as  DATE)
+            and CAST(m.muestra_fecha as  DATE) >= CAST('$fecha' as  DATE)
+            and CAST(m.muestra_fecha as  DATE) <= CAST('$fecha_hasta' as  DATE)
             GROUP BY  n.nota_id
             , n.`nota_nombre`
             , n.`color`
             , n.`color_bg`";
+
             $notas_productor = DB::select(DB::raw($statement));
-            if( count($notas_productor) > 0 ){
+            if (count($notas_productor) > 0) {
                 #AGREGAR LOS PRODUCTORES QUE SI TIENEN NOTAS EN EL MOMENTO
                 array_push($arrayProductores, $p);
             }
         }
-        $productores =  Productor::whereIn('productor_id',$arrayProductores)->get();
-        foreach($productores as $p){
-            $statement ="SELECT COUNT(*) as total
+        $productores = Productor::whereIn('productor_id', $arrayProductores)->get();
+        foreach ($productores as $p) {
+            $statement = "SELECT COUNT(*) as total
             , n.`nota_id`
             , n.`nota_nombre`
             , n.`color`
@@ -142,29 +152,30 @@ WHERE productor_id = $p->productor_id and CAST(muestra_fecha as  DATE) = CAST('$
             FROM muestra m
             LEFT JOIN nota n ON n.`nota_id` = m.`nota_id`
             WHERE m.productor_id = $p->productor_id
-            and CAST(m.muestra_fecha as  DATE) = CAST('$fecha' as  DATE)
+            and CAST(m.muestra_fecha as  DATE) >= CAST('$fecha' as  DATE)
+            and CAST(m.muestra_fecha as  DATE) <= CAST('$fecha_hasta' as  DATE)
             GROUP BY  n.nota_id
             , n.`nota_nombre`
             , n.`color`
             , n.`color_bg`";
             $notas_productor = DB::select(DB::raw($statement));
-            $p->notas =  $notas_productor;
+            $p->notas = $notas_productor;
         }
-        return view('graficos.tiemporeal',compact('fecha_seleccionada','productores'));
+        //dd($productores);
+        return view('graficos.tiemporeal', compact('fecha_seleccionada', 'fecha_seleccionada_hasta', 'productores'));
     }
-
 
 
     public function graficoconsolidado()
     {
         //
         $productores = Productor::orderBy('productor_nombre')->get();
-        return view('graficos.consolidado',compact('productores'));
+        return view('graficos.consolidado', compact('productores'));
     }
 
 
-
-    public function vergraficosconsolidado(Request $request){
+    public function vergraficosconsolidado(Request $request)
+    {
 
         $rules = [
             'productor' => 'required',
@@ -177,19 +188,19 @@ WHERE productor_id = $p->productor_id and CAST(muestra_fecha as  DATE) = CAST('$
         $this->validate($request, $rules, $messages);
 
         $productores_array = $request->productor;
-       
+
         $arrayProductores = array();
 
 
         foreach ($productores_array as $p) {
             //echo $p;
-            $statement ="SELECT COUNT(*) as total
+            $statement = "SELECT COUNT(*) as total
             , n.`nota_id`
             , n.`nota_nombre`
             , n.`color`
             , n.`color_bg`
             , round((COUNT(*) / (SELECT COUNT(*) FROM muestra
-WHERE productor_id = $p) )*100,1) AS porcentaje
+            WHERE productor_id = $p) )*100,1) AS porcentaje
             FROM muestra m
             LEFT JOIN nota n ON n.`nota_id` = m.`nota_id`
             WHERE m.productor_id = $p
@@ -198,20 +209,20 @@ WHERE productor_id = $p) )*100,1) AS porcentaje
             , n.`color`
             , n.`color_bg`";
             $notas_productor = DB::select(DB::raw($statement));
-            if( count($notas_productor) > 0 ){
+            if (count($notas_productor) > 0) {
                 #AGREGAR LOS PRODUCTORES QUE SI TIENEN NOTAS EN EL MOMENTO
                 array_push($arrayProductores, $p);
             }
         }
-        $productores =  Productor::whereIn('productor_id',$arrayProductores)->get();
-        foreach($productores as $p){
-            $statement ="SELECT COUNT(*) as total
+        $productores = Productor::whereIn('productor_id', $arrayProductores)->get();
+        foreach ($productores as $p) {
+            $statement = "SELECT COUNT(*) as total
             , n.`nota_id`
             , n.`nota_nombre`
             , n.`color`
             , n.`color_bg`
             , round((COUNT(*) / (SELECT COUNT(*) FROM muestra
-WHERE productor_id = $p->productor_id) )*100,1) AS porcentaje
+            WHERE productor_id = $p->productor_id) )*100,1) AS porcentaje
             FROM muestra m
             LEFT JOIN nota n ON n.`nota_id` = m.`nota_id`
             WHERE m.productor_id = $p->productor_id
@@ -220,9 +231,9 @@ WHERE productor_id = $p->productor_id) )*100,1) AS porcentaje
             , n.`color`
             , n.`color_bg`";
             $notas_productor = DB::select(DB::raw($statement));
-            $p->notas =  $notas_productor;
+            $p->notas = $notas_productor;
             $fecha_seleccionada = '2019';
         }
-        return view('graficos.reporteconsolidado',compact('fecha_seleccionada','productores'));
+        return view('graficos.reporteconsolidado', compact('fecha_seleccionada', 'productores'));
     }
 }

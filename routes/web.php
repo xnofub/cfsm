@@ -14,16 +14,37 @@
 
 Auth::routes();
 Auth::routes(['register' => false]);
+
+Route::get('testg','TestController@index');
+
+#Route::post('/login', 'Auth\LoginController@login');
+Route::get('/', function () {
+    if (Auth::check() && isset(Auth::user()->perfil->perfil_nombre)) {
+        //return view('layouts.web');
+        if(Auth::user()->perfil->perfil_nombre != "Admin"){
+            return redirect()->to('/muestras');
+        }
+        if(Auth::user()->perfil->perfil_nombre == "Admin"){
+            return redirect()->to('/dashboard');
+        }
+    }
+
+    //return view('layouts.web');
+    if (Auth::check() && Auth::user()->perfil_nombre == "Admin") {
+        return redirect()->to('/getDataByProductoresId');
+    }
+    //return redirect()->to('/muestras');
+
+    return view('welcome');
+});
+
+
 Route::get('dashboard', 'AdminController@index')->name('dashboard');
 Route::post('dashboard', 'AdminController@filter')->name('dashboard');
 
-
-
-#Route::post('/login', 'Auth\LoginController@login');
-
 Route::group(['middleware' => ['web']], function () { #auth
 
-    Route::get('/', function () {
+    /*Route::get('/', function () {
 
         if (Auth::check() && Auth::user()->perfil->perfil_nombre != "Admin") {
             //return view('layouts.web');
@@ -34,8 +55,8 @@ Route::group(['middleware' => ['web']], function () { #auth
         if(Auth::check() && Auth::user()->perfil_nombre == "Admin") {
             return redirect()->to('/dashboard');
         }
-        return redirect()->to('/login');
-    });
+        #return redirect()->to('/login');
+    });*/
 
     Route::get('/test', function () {
         dd(Auth::user()->perfil->perfil_nombre);
@@ -44,13 +65,17 @@ Route::group(['middleware' => ['web']], function () { #auth
 
     #Route::get('/', 'HomeController@index');
     Route::get('/home', function () {
-        if (Auth::user()->perfil->perfil_nombre != "Admin") {
+        if (Auth::check() && isset(Auth::user()->perfil->perfil_nombre)) {
             //return view('layouts.web');
-            return redirect()->to('/muestras');
+            if(Auth::user()->perfil->perfil_nombre != "Admin"){
+                return redirect()->to('/muestras/create');
+            }
+            if(Auth::user()->perfil->perfil_nombre == "Admin"){
+                return redirect()->to('/dashboard');
+            }
         }
+        return redirect()->to('/muestras');
 
-        //return view('layouts.web');
-        return redirect()->to('/dashboard');
 
         #
 
@@ -61,8 +86,6 @@ Route::group(['middleware' => ['web']], function () { #auth
 
 
     Route::group(['middleware' => ['auth']], function () { #auth
-
-
 
 
         Route::resource('productores', 'ProductorController');
@@ -80,17 +103,19 @@ Route::group(['middleware' => ['web']], function () { #auth
         Route::resource('notas', 'NotaController');
         Route::resource('provincias', 'ProvinciaController');
         Route::resource('regiones', 'RegionController');
-        Route::resource('tolerancias', 'ToleranciaController');
+        #Route::resource('tolerancias', 'ToleranciaController');
         #Route::resource('users', 'UsersController');
         Route::resource('variedades', 'VariedadController');
+        Route::resource('productorVariedades', 'ProductorVariedadController');
         Route::resource('zonas_defectos', 'ZonaDefectoController');
-        Route::get('reportes', 'ReporteController@index');
+        Route::resource('reportes', 'ReporteController');
+        Route::get('reporte', 'ReporteController@index');
         Route::resource('graficos', 'GraficoController');
         Route::resource('pallet', 'PaletController');
-        Route::get('paletsDatatables','PaletController@paletsDatatables');
-        Route::get('verMuestras/{lote_codigo}','PaletController@verMuestras')->name('verMuestras');
-        Route::get('palletproductor','PaletController@palletproductor')->name('palletproductor');
-        Route::post('generaExelPallet','PaletController@generaExelPallet')->name('generaExelPallet');
+        Route::get('paletsDatatables', 'PaletController@paletsDatatables');
+        Route::get('verMuestras/{lote_codigo}', 'PaletController@verMuestras')->name('verMuestras');
+        Route::get('palletproductor', 'PaletController@palletproductor')->name('palletproductor');
+        Route::post('generaExelPallet', 'PaletController@generaExelPallet')->name('generaExelPallet');
 
     });
 
@@ -125,6 +150,21 @@ Route::group(['middleware' => ['web']], function () { #auth
     Route::get('toleranciasDatetables', 'ToleranciaController@toleranciasDatetables');
     Route::get('toleranciasDelete/{id}', 'ToleranciaController@toleranciasDelete');
     Route::post('getProductoresByRegionId', 'MuestraController@getProductoresByRegionId');
+
+    Route::post('getProductorVariedadByProductor', 'ProductorVariedadController@getProductorVariedadByProductor');
+    Route::post('getVariedadByProductor', 'ProductorVariedadController@getVariedadByProductor');
+
+
+
+
+    Route::post('setProductorVariedad', 'ProductorVariedadController@setProductorVariedad');
+
+
+    Route::get('productorVariedadDatetables', 'ProductorVariedadController@productorVariedadDatetables');
+
+
+    Route::post('getDataByProductoresId', 'AdminController@getDataByProductoresId');
+
     Route::post('vergraficos', 'GraficoController@vergraficos')->name('vergraficos');
     Route::post('reporteConsolidado', 'MuestraController@GetReporteConsolidado')->name('reporteConsolidado');
 

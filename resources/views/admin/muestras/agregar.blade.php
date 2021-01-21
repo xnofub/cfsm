@@ -56,6 +56,21 @@
 
           //dalert(region_id);
          });
+
+        $("#productor_id").change(function () {
+            var route = "{!!URL::to('/getVariedadByProductor')!!}";
+            var productor_id = $("#productor_id").val();
+            var select = $("#variedad_id");
+            var token = $("input[name=_token]").val();
+            $("#variedad_id option").remove();
+            $.post(route, {productor_id: productor_id, _token: token})
+                .done(function (data) {
+                    $(data).each(function (index, value) {
+                        select.append("<option value='" + value.id + "'> " + value.nombre + "</option>");
+                        console.log(value.id + value.nombre);
+                    });
+                });
+        });
     });
 </script>
 @endsection

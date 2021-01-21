@@ -16,62 +16,62 @@
     <div class="col">
             <table class="table table-striped table-hover">
                 <tbody>
-                <tr> 
+                <tr>
                         <td> QR:</td>
                         <td> {{$muestra->muestra_qr}}</td>
-                </tr> 
-                <tr> 
+                </tr>
+                <tr>
                         <td>Fecha:</td>
                         <td>{{  date('d-m-Y', strtotime($muestra->muestra_fecha))}} </td>
-                </tr>  
-                <tr> 
+                </tr>
+                <tr>
                         <td>Region:</td>
                         <td>{{  $muestra->region->region_nombre }} </td>
-                </tr>  
-                <tr class="table-success"> 
+                </tr>
+                <tr class="table-success">
                         <td>Productor:</td>
                         <td>{{$muestra->productor->productor_nombre}} </td>
-                </tr>  
-                <tr> 
+                </tr>
+                <tr>
                         <td>Especie:</td>
                         <td>{{$muestra->especie->especie_nombre}} </td>
                 </tr>
-                <tr class="table-success"> 
+                <tr class="table-success">
                         <td>Variedad:</td>
                         <td>{{$muestra->variedad->variedad_nombre}} </td>
-                </tr>  
-                <tr> 
+                </tr>
+                <tr>
                         <td>Calibre: </td>
                         <td>{{$muestra->calibre->calibre_nombre}}</td>
                 </tr>
-                <tr> 
+                <tr>
                         <td>Categoria:</td>
                         <td>{{$muestra->categoria->categoria_nombre}} </td>
-                </tr>  
-                <tr> 
+                </tr>
+                <tr>
                         <td>Embalaje:</td>
                         <td>{{$muestra->embalaje->embalaje_nombre}} </td>
-                </tr> 
-                <tr> 
+                </tr>
+                <tr>
                         <td>Etiqueta:</td>
                         <td>{{ $muestra->etiqueta->etiqueta_nombre}} </td>
-                </tr> 
-                <tr class="table-success"> 
+                </tr>
+                <tr class="table-success">
                     <td>Apariencia:</td>
                     <td>{{$muestra->apariencia->apariencia_nombre}} </td>
-                </tr> 
-                <tr class="table-success"> 
+                </tr>
+                <tr class="table-success">
                         <td>Peso:</td>
                         <td>{{$muestra->muestra_peso}} </td>
-                </tr> 
-                <tr class="table-success"> 
+                </tr>
+                <tr class="table-success">
                     <td>Número de bolsas:</td>
                     <td>{{$muestra->muestra_bolsas}} </td>
-                </tr> 
-                <tr class="table-success"> 
+                </tr>
+                <tr class="table-success">
                     <td>Número de racimos:</td>
                     <td>{{$muestra->muestra_racimos}} </td>
-                 </tr> 
+                 </tr>
                 </tbody>
             </table>
         </div>
@@ -103,8 +103,8 @@
             </div>
     </div>
 
-    
-    
+
+
     <div class="row">
             <div class="col">
 
@@ -156,7 +156,7 @@
         </div>
         <div class="row">
                 <div class="col">
-    
+
                         @if (count($muestra_imagenes) > 0)
                         <table class="table table-striped  table-hover ">
                             <thead class="thead-dark" >
@@ -181,7 +181,7 @@
         </div>
         <div class="row">
                 <div class="col">
-                        <a href="{!!URL::to('/reportes')!!}" class="btn btn btn-success   btn-block"> Volver <i class="far fa-save"></i> </a>
+                        <a href="{!!URL::to('/reporte')!!}" class="btn btn btn-success   btn-block"> Volver <i class="far fa-save"></i> </a>
                 </div>
         </div>
     @endsection
