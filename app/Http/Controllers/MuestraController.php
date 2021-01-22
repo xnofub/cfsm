@@ -105,7 +105,7 @@ class MuestraController extends Controller
             'embalaje_id' => 'required',
             'etiqueta_id' => 'required',
             'apariencia_id' => 'required',
-            'muestra_bolsas' => 'required|numeric|min:6|max:12',
+            'muestra_bolsas' => 'required|numeric|min:4|max:12',
             'muestra_racimos' => 'required|numeric|min:1|max:30',
             'muestra_brix' => 'required|numeric|min:10|max:28',
             'muestra_desgrane' => 'required|numeric|min:0|max:1000',
@@ -132,8 +132,8 @@ class MuestraController extends Controller
 
             'muestra_bolsas.required' => 'Bolsas es obligatorio.',
             'muestra_bolsas.numeric' => 'Bolsas debe ser número..',
-            'muestra_bolsas.min' => 'Número de bolsas fuera de rango 6 - 12 (número).',
-            'muestra_bolsas.max' => 'Número de bolsas fuera de rango 6 - 12 (número).',
+            'muestra_bolsas.min' => 'Número de bolsas fuera de rango 4 - 12 (número).',
+            'muestra_bolsas.max' => 'Número de bolsas fuera de rango 4 - 12 (número).',
 
             'muestra_racimos.required' => 'Racimos es obligatorio.',
             'muestra_racimos.numeric' => 'Bolsas debe ser número.',
@@ -390,7 +390,7 @@ class MuestraController extends Controller
             'embalaje_id' => 'required',
             'etiqueta_id' => 'required',
             'apariencia_id' => 'required',
-            'muestra_bolsas' => 'required|numeric|min:6|max:12',
+            'muestra_bolsas' => 'required|numeric|min:4|max:12',
             'muestra_racimos' => 'required|numeric|min:1|max:30',
             'muestra_brix' => 'required|numeric|min:10|max:28',
         ];
@@ -414,8 +414,8 @@ class MuestraController extends Controller
 
             'muestra_bolsas.required' => 'Bolsas es obligatorio.',
             'muestra_bolsas.numeric' => 'Bolsas debe ser número..',
-            'muestra_bolsas.min' => 'Número de bolsas fuera de rango 6 - 12 (número).',
-            'muestra_bolsas.max' => 'Número de bolsas fuera de rango 6 - 12 (número).',
+            'muestra_bolsas.min' => 'Número de bolsas fuera de rango 4 - 12 (número).',
+            'muestra_bolsas.max' => 'Número de bolsas fuera de rango 4 - 12 (número).',
 
             'muestra_racimos.required' => 'Racimos es obligatorio.',
             'muestra_racimos.numeric' => 'Bolsas debe ser número.',
@@ -663,7 +663,6 @@ class MuestraController extends Controller
 
     public function paso3(Request $request)
     {
-        $swerror = 0;
         $muestra = Muestra::find($request->muestra_id);
         $defecto_id = $request->defecto_id;
         $defecto = Defecto::find($defecto_id);
@@ -672,9 +671,6 @@ class MuestraController extends Controller
         if ($defecto->zona_id == 1) {
             #CALCULO POR %
             $calculado = round((($muestra_defecto_valor * 100) / $muestra->muestra_peso), 2);
-            if($calculado > 100 ){
-                $swerror = 1;
-            }
             $tolerancia = Tolerancia::where('defecto_id', $defecto_id)
                 ->where('tolerancia_desde', '<=', $calculado)
                 ->where('tolerancia_hasta', '>=', $calculado)
@@ -690,43 +686,33 @@ class MuestraController extends Controller
         } else {
             #CALCULO POR NUMERO
             $calculado = $muestra_defecto_valor;
-            if($calculado > 50 ){
-                $swerror = 1;
-            }
-
-
             $nota_id = 5;
             $nota = Nota::find($nota_id);
             $muestra_defecto_valor = $muestra_defecto_valor;
         }
         //return response()->json(1);
         #print_r($tolerancia->nota->nota_nombre);
-        if($swerror == 0 ){
-            try {
-                $user = null;
-                if (Auth::check()) {
-                    $user = Auth::user();
-                }
-                $muestra_defecto = New MuestraDefecto();
-                $muestra_defecto->muestra_id = $request->muestra_id;
-                $muestra_defecto->defecto_id = $request->defecto_id;
-                $muestra_defecto->muestra_defecto_valor = $request->muestra_defecto_valor;
-                $muestra_defecto->nota_id = $nota->nota_id;
-                if ($user) {
-                    $muestra_defecto->user_id = $user->id;
-                }
-                $muestra_defecto->muestra_defecto_calculo = $calculado;
-                $muestra_defecto->save();
-                echo 'REGISTRADO CON EXITO';
-            } catch (Exception $e) {
-                return $e->getMessage();
-            }
 
-        }else{
-            echo 'ERROR EN LOS DATOS INGRESADOS';
+        try {
+            $user = null;
+            if (Auth::check()) {
+                $user = Auth::user();
+            }
+            $muestra_defecto = New MuestraDefecto();
+            $muestra_defecto->muestra_id = $request->muestra_id;
+            $muestra_defecto->defecto_id = $request->defecto_id;
+            $muestra_defecto->muestra_defecto_valor = $request->muestra_defecto_valor;
+            $muestra_defecto->nota_id = $nota->nota_id;
+            if ($user) {
+                $muestra_defecto->user_id = $user->id;
+            }
+            $muestra_defecto->muestra_defecto_calculo = $calculado;
+            $muestra_defecto->save();
+            echo 'registrado con exito';
+        } catch (Exception $e) {
+            return $e->getMessage();
         }
-        
-        
+
     }
 
     public function getDefectosByGrupo(Request $request)
@@ -994,11 +980,11 @@ class MuestraController extends Controller
         $statement = 'SELECT m.muestra_id
         , m.muestra_qr
         , m.muestra_fecha
-        , m.muestra_peso        
-        , m.muestra_racimos 
-        , m.muestra_brix 
-        , m.muestra_bolsas 
-        , et.etiqueta_nombre 
+        , m.muestra_peso
+        , m.muestra_racimos
+        , m.muestra_brix
+        , m.muestra_bolsas
+        , et.etiqueta_nombre
         , e.especie_nombre
         , v.variedad_nombre
         , cl.calibre_nombre
@@ -1423,20 +1409,19 @@ class MuestraController extends Controller
         WHERE  p.productor_id = ' . $productor_id . '
         GROUP BY  m.muestra_id
         , m.muestra_id
-        , m.`muestra_qr`
-        , m.`muestra_brix`
-        , m.`lote_codigo`
-        , m.`muestra_bolsas`
-        , e.`especie_nombre`
-        , v.`variedad_nombre`
-        , cl.`calibre_nombre`
-        , ct.`categoria_nombre`
-        , m.`nota_id`
-        , n.`nota_nombre`
-        , a.`apariencia_nombre`
-        , p.productor_nombre
-        ';
-        Log::info($statement);
+        , m.muestra_qr
+        , m.muestra_brix
+        , m.lote_codigo
+        , m.muestra_bolsas
+        , e.especie_nombre
+        , v.variedad_nombre
+        , cl.calibre_nombre
+        , ct.categoria_nombre
+        , m.nota_id
+        , n.nota_nombre
+        , a.apariencia_nombre
+        , p.productor_nombre';
+        //Log::info($statement);
         $consolidado = DB::select(DB::raw($statement));
 
         $spreadsheet = new Spreadsheet();
