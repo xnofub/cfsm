@@ -184,7 +184,7 @@
                     // you will get response from your php page (what you echo or print)
                             //LLEGA AL 3 PASO DONDE SE GUARDAN LOS DEFECTOS 1 A 1 alert("ok");
                            $("#showresult").html(response);
-                           alert(response);
+                           //alert(response);
                            location.reload();
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
@@ -211,7 +211,7 @@
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                     console.log(textStatus, errorThrown);
-                        alert(textStatus);
+                        //alert(textStatus);
                     }
                 });
 
